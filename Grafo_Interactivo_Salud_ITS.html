@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Enciclopedia y Red Conceptual Interactiva: Salud e ITS (UACM)</title>
+    <style>
+        :root {
+            --bg-main: #0a0e17;
+            --bg-card: #131b2e;
+            --bg-panel: #182239;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --primary: #38bdf8;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --font-size-base: 14px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
+        body { background: var(--bg-main); color: var(--text-main); overflow: hidden; width: 100vw; height: 100vh; position: fixed; }
+
+        /* HEADER SUPERIOR */
+        header {
+            position: absolute; top: 0; left: 0; right: 0; height: 60px;
+            background: rgba(10, 14, 23, 0.95); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 100;
+        }
+        .header-title-box { display: flex; flex-direction: column; }
+        .header-title { font-size: 15px; font-weight: 700; color: var(--primary); }
+        .header-subtitle { font-size: 11px; font-weight: 400; color: var(--text-muted); }
+
+        .search-container { position: relative; }
+        .search-input {
+            background: var(--bg-card); border: 1px solid #334155; color: #fff;
+            padding: 7px 12px 7px 32px; border-radius: 20px; font-size: 13px; width: 150px;
+            transition: width 0.3s ease; outline: none;
+        }
+        .search-input:focus { width: 220px; border-color: var(--primary); }
+        .search-icon { position: absolute; left: 10px; top: 8px; color: #64748b; font-size: 12px; }
+
+        /* BARRA DE FILTROS */
+        .filter-bar {
+            position: absolute; top: 66px; left: 10px; right: 10px;
+            display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; z-index: 90;
+            scrollbar-width: none;
+        }
+        .filter-bar::-webkit-scrollbar { display: none; }
+        .pill {
+            padding: 5px 12px; border-radius: 14px; font-size: 11px; font-weight: 600;
+            cursor: pointer; border: 1px solid var(--border-color);
+            background: var(--bg-card); color: #cbd5e1; white-space: nowrap; transition: 0.2s;
+        }
+        .pill.active { background: var(--primary); color: #0a0e17; border-color: var(--primary); }
+        .pill.salud { border-color: #2d6a4f; color: #80ed99; }
+        .pill.its { border-color: #9d0208; color: #ffccd5; }
+        .pill.medicina { border-color: #0077b6; color: #90e0ef; }
+        .pill.ciencia { border-color: #7b2cbf; color: #e0aaff; }
+        .pill.social { border-color: #a68a56; color: #ede0d4; }
+
+        /* CANVAS INTERACTIVO */
+        #graphCanvas { width: 100%; height: 100%; display: block; touch-action: none; }
+
+        /* CONTROLES FLOTANTES EN PANTALLA */
+        .controls {
+            position: absolute; bottom: 20px; right: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 90;
+        }
+        .btn-ctrl {
+            width: 40px; height: 40px; border-radius: 50%; background: var(--bg-panel); color: #f8fafc;
+            border: 1px solid var(--border-color); font-size: 16px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.5); user-select: none;
+        }
+        .btn-ctrl:active { transform: scale(0.92); }
+
+        /* BOTON VISIBILIDAD DE ENLACES GLOBALES */
+        .toggle-links-btn {
+            position: absolute; bottom: 20px; left: 16px; z-index: 90;
+            background: var(--bg-panel); border: 1px solid var(--border-color); color: #cbd5e1;
+            font-size: 11px; font-weight: 600; padding: 8px 14px; border-radius: 20px;
+            cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+        }
+        .toggle-links-btn.active { border-color: var(--primary); color: var(--primary); background: #0f2744; }
+
+        /* DRAWER MODAL DE TEXTO DENSO Y LECTURA */
+        .drawer {
+            position: absolute; bottom: 0; left: 0; right: 0; max-height: 86vh;
+            background: var(--bg-panel); border-top: 3px solid var(--primary); border-radius: 22px 22px 0 0;
+            padding: 24px 20px 30px; overflow-y: auto; transform: translateY(105%); transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.85); z-index: 200;
+        }
+        .drawer.open { transform: translateY(0); }
+
+        .drawer-top-bar {
+            display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color); padding-bottom: 12px;
+        }
+        .drawer-meta { display: flex; flex-direction: column; gap: 4px; }
+        .drawer-badge {
+            display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: 700;
+            text-transform: uppercase; width: fit-content;
+        }
+        .drawer-title { font-size: 19px; font-weight: 700; color: #fff; line-height: 1.3; }
+
+        .drawer-actions { display: flex; align-items: center; gap: 8px; }
+        .btn-font {
+            background: #0f172a; border: 1px solid #334155; color: #cbd5e1; width: 30px; height: 30px;
+            border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .drawer-close {
+            background: #0f172a; border: 1px solid #334155; font-size: 22px; color: #94a3b8;
+            cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        }
+
+        /* FORMATO DE TEXTO DENSO */
+        .drawer-content { font-size: var(--font-size-base); line-height: 1.7; color: #e2e8f0; margin-top: 10px; }
+        .drawer-content h2, .drawer-content h3 { font-size: 15px; color: var(--primary); margin: 18px 0 8px; font-weight: 700; }
+        .drawer-content h4 { font-size: 13px; color: #94a3b8; margin: 12px 0 6px; }
+        .drawer-content p { margin-bottom: 12px; }
+        .drawer-content ul, .drawer-content ol { margin-left: 20px; margin-bottom: 14px; }
+        .drawer-content li { margin-bottom: 6px; }
+        .quote {
+            background: rgba(10, 14, 23, 0.85); border-left: 4px solid var(--primary);
+            padding: 12px 16px; border-radius: 0 10px 10px 0; font-size: 13px; font-style: italic;
+            color: #cbd5e1; margin: 16px 0;
+        }
+
+        /* SECCIÓN OCULTABLE DE NODOS RELACIONADOS */
+        .related-toggle-container {
+            margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color);
+        }
+        .btn-toggle-related {
+            width: 100%; background: #0a0e17; border: 1px solid #334155; color: var(--primary);
+            padding: 11px 16px; border-radius: 12px; font-size: 13px; font-weight: 600;
+            display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: 0.2s;
+        }
+        .btn-toggle-related:hover { background: #131b2e; border-color: var(--primary); }
+
+        .related-nodes-panel {
+            display: none; margin-top: 12px; flex-wrap: wrap; gap: 8px;
+            background: #0a0e17; padding: 14px; border-radius: 12px; border: 1px solid #334155;
+        }
+        .related-nodes-panel.visible { display: flex; }
+        .rel-node-chip {
+            padding: 6px 12px; background: var(--bg-card); border: 1px solid #475569; border-radius: 16px;
+            font-size: 11px; font-weight: 500; color: #f1f5f9; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .rel-node-chip:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-1px); }
+        .rel-node-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title-box">
+            <span class="header-title">Red Conceptual: Salud e ITS</span>
+            <span class="header-subtitle">Tesis UACM (M. E. Ramírez Ibarra)</span>
+        </div>
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" class="search-input" placeholder="Buscar concepto...">
+        </div>
+    </header>
+
+    <div class="filter-bar">
+        <div class="pill active" onclick="filterCategory('todos', this)">Todos (34)</div>
+        <div class="pill salud" onclick="filterCategory('salud', this)">1. Núcleo Salud</div>
+        <div class="pill its" onclick="filterCategory('its', this)">2. Problema ITS</div>
+        <div class="pill medicina" onclick="filterCategory('medicina', this)">3. Medicina (MMH)</div>
+        <div class="pill ciencia" onclick="filterCategory('ciencia', this)">4. Paradigmas Ciencia</div>
+        <div class="pill social" onclick="filterCategory('social', this)">5. Social & Territorial</div>
+    </div>
+
+    <canvas id="graphCanvas"></canvas>
+
+    <button id="btnToggleLinks" class="toggle-links-btn" onclick="toggleGlobalLinks()">
+        <span id="linkIcon">🔗</span> <span id="linkText">Ocultar Todas las Líneas</span>
+    </button>
+
+    <div class="controls">
+        <button class="btn-ctrl" onclick="zoomIn()" title="Acercar">+</button>
+        <button class="btn-ctrl" onclick="zoomOut()" title="Alejar">−</button>
+        <button class="btn-ctrl" onclick="resetView()" title="Centrar">🎯</button>
+    </div>
+
+    <!-- DRAWER DE TEXTO DENSO Y LECTURA -->
+    <div id="detailDrawer" class="drawer">
+        <div class="drawer-top-bar">
+            <div class="drawer-meta">
+                <span id="drawerBadge" class="drawer-badge"></span>
+                <h2 id="drawerTitle" class="drawer-title"></h2>
+            </div>
+            <div class="drawer-actions">
+                <button class="btn-font" onclick="changeFontSize(-1)">A−</button>
+                <button class="btn-font" onclick="changeFontSize(1)">A+</button>
+                <button class="drawer-close" onclick="closeDrawer()">×</button>
+            </div>
+        </div>
+
+        <div id="drawerBody" class="drawer-content"></div>
+
+        <!-- SECCIÓN DE NODOS RELACIONADOS (OCULTA POR DEFECTO A MENOS QUE EL USUARIO LA DESPLIEGUE) -->
+        <div class="related-toggle-container">
+            <button id="btnToggleRelated" class="btn-toggle-related" onclick="toggleRelatedPanel()">
+                <span id="relatedBtnText">🔗 Ver Nodos Relacionados (0)</span>
+                <span id="relatedArrow">▼</span>
+            </button>
+            <div id="relatedNodesPanel" class="related-nodes-panel"></div>
+        </div>
+    </div>
+
+    <script>
+        const rawNodes = [{"id": "01_Definicion_de_Salud_Chapela", "title": "Definición de Salud (Chapela)", "group": "salud", "badge": "Núcleo de la Salud", "color": "#2d6a4f", "text": "<h3>Definición Teórica Central (Luz María Chapela, 2007)</h3>\n<blockquote class=\"quote\">«La salud es la capacidad corporeizada de inventar futuros viables y alcanzables, permitiendo a los sujetos éticos dar significado, valor y sentido a su mundo y práctica.»</blockquote>\n\n<p>Frente a la tradición biomédica ortodoxa que define la salud de manera negativa (ausencia de afecciones o enfermedades) o como un estado estático de equilibrio biológico, la propuesta adoptada en esta investigación postula una ruptura radical: la salud es una potencia viva que reside en el cuerpo vivo, sintiente y deseante.</p>\n\n<h3>Las 6 Capacidades Humanas Fundamentales según Chapela:</h3>\n<ul>\n  <li><strong>Capacidad de Razonamiento (Homo Sapiens):</strong> Reflexionar críticamente sobre la propia realidad y construir conocimiento independiente de la tutela ciega de los expertos institucionales.</li>\n  <li><strong>Capacidad de Imaginar y Jugar (Homo Ludens):</strong> Idear futuros posibles, proyectar aspiraciones y crear alternativas frente a la adversidad cotidiana.</li>\n  <li><strong>Capacidad de Motivación y Apasionamiento (Dimensión Erótica):</strong> La pulsión del amor, el deseo, la ternura, el placer corporal y el entusiasmo existencial como motores de vida.</li>\n  <li><strong>Capacidad de Trabajo y Transformación (Homo Faber):</strong> Transformar el entorno material y social a través de la acción comunitaria consciente.</li>\n  <li><strong>Capacidad Política y de Toma de Decisiones:</strong> Deliberar, disentir, elegir de manera informada y ejercer autonomía sobre el propio cuerpo y destino.</li>\n  <li><strong>Capacidad Económica y de Gestión:</strong> Movilizar recursos y capitales materiales o simbólicos (Pierre Bourdieu) para concretar los proyectos de vida trazados.</li>\n</ul>\n\n<h3>Aplicación Crítica a los Servicios de Salud:</h3>\n<p>Cuando en el <em>Centro de Salud T-III Dr. Maximiliano Ruíz Castañeda</em> el personal médico regaña a los adolescentes, les niega anticonceptivos sin la presencia de sus padres o despacha la consulta en tres minutos sin escucharlos, <strong>mutila directamente su capacidad política y erótica</strong>. Al despojarlos de su condición de sujetos con agencia, la institución los deja desarmados frente a los riesgos de infecciones de transmisión sexual (ITS) como el VPH y el VIH.</p>", "links": ["Promoción de la Salud Emancipatoria", "Proyecto de Vida y Autonomía Corporal", "Carta de Ottawa (1986)", "Sujeto Ético y Capacidad Deliberativa", "Infecciones de Transmisión Sexual (ITS)"]}, {"id": "02_Carta_de_Ottawa_1986", "title": "Carta de Ottawa (1986)", "group": "salud", "badge": "Núcleo de la Salud", "color": "#2d6a4f", "text": "<h3>Hito Histórico Internacional</h3>\n<p>Aprobada en la Primera Conferencia Internacional sobre la Promoción de la Salud celebrada en Ottawa, Canadá (21 de noviembre de 1986):</p>\n<blockquote class=\"quote\">«La promoción de la salud consiste en proporcionar a los pueblos los medios necesarios para mejorar su salud y ejercer un mayor control sobre la misma. Para alcanzar un estado adecuado de bienestar físico, mental y social, un individuo o grupo debe ser capaz de identificar y realizar sus aspiraciones, de satisfacer sus necesidades y de cambiar o adaptarse al medio ambiente.»</blockquote>\n\n<h3>Los Prerrequisitos Fundamentales para la Salud (Cita Textual, p. 81):</h3>\n<p>La investigación recalca que la salud exige condiciones materiales previas indispensables:</p>\n<ol>\n  <li><strong>La Paz</strong> y la ausencia de violencia armada o estructural.</li>\n  <li><strong>La Educación</strong> con sentido crítico y laico.</li>\n  <li><strong>La Vivienda Digna</strong> con servicios urbanos garantizados.</li>\n  <li><strong>La Alimentación Suficiente</strong> y segura.</li>\n  <li><strong>Unos Ingresos Económicos Dignos</strong> que erradiquen la miseria.</li>\n  <li><strong>Un Ecosistema Estable</strong> y sustentable.</li>\n  <li><strong>La Justicia Social y la Equidad</strong> distributiva.</li>\n</ol>\n\n<h3>Cinco Ejes Estratégicos de Ottawa:</h3>\n<ul>\n  <li>Elaboración de políticas públicas saludables intersectoriales.</li>\n  <li>Creación de ambientes físicos y sociales favorables al bienestar.</li>\n  <li>Reforzamiento de la acción y organización comunitaria.</li>\n  <li>Desarrollo de aptitudes personales a través de la educación integral.</li>\n  <li>Reorientación de los servicios de salud hacia la prevención y la calidez.</li>\n</ul>\n\n<h3>La Denuncia frente a Iztapalapa:</h3>\n<p>Ramírez Ibarra evidencia la contradicción entre este marco internacional y la práctica en Iztapalapa: mientras la propaganda oficial repite el discurso de Ottawa, en las colonias marginadas persisten el desabasto de agua, el desempleo y la carencia de consultorios confidenciales para jóvenes.</p>", "links": ["Definición de Salud (Chapela)", "Territorio y Marginación en Iztapalapa", "Promoción de la Salud Emancipatoria", "Promoción de la Salud Institucional"]}, {"id": "03_Promocion_de_la_Salud_Emancipatoria", "title": "Promoción de la Salud Emancipatoria", "group": "salud", "badge": "Núcleo de la Salud", "color": "#2d6a4f", "text": "<h3>El Paradigma Heterodoxo de la UACM</h3>\n<p>La orientación teórica central defendida por la Licenciatura en Promoción de la Salud de la UACM plantea:</p>\n<blockquote class=\"quote\">«La propuesta emancipatoria busca estudiar e incorporar a la promoción de la salud el paradigma comprensivo... recuperando aportaciones de la sociología de la cultura, la educación popular de Paulo Freire y la bioética ciudadana. Su teoría destaca por considerar a los seres humanos como sujetos éticos capaces de construir conocimiento propio independientemente de los expertos o instituciones.»</blockquote>\n\n<h3>Postulados Esenciales del Enfoque Emancipatorio:</h3>\n<ul>\n  <li><strong>Ruptura con la Educación Bancaria:</strong> Rechaza que el médico deba 'depositar' órdenes o recetas en un paciente pasivo. El promotor de salud propicia el diálogo intersubjetivo y la reflexión colectiva.</li>\n  <li><strong>Desmedicalización de la Sexualidad:</strong> La vida sexual no es un mero asunto bacteriológico o reproductivo; comprende afectividad, deseo, placer, equidad de género y defensa de derechos.</li>\n  <li><strong>Pedagogía del Taller Dialógico:</strong> Construir espacios seguros donde los adolescentes compartan vivencias, derriben mitos machistas sobre el condón y formulen sus propias preguntas sin temor a represalias.</li>\n  <li><strong>Conciencia Ciudadana:</strong> Empoderar a los jóvenes para exigir el cumplimiento estricto de las leyes y normas sanitarias (como la NOM-005-SSA2-1993).</li>\n</ul>", "links": ["Definición de Salud (Chapela)", "Modelo Médico Hegemónico (Menéndez)", "Educación Sexual Integral Emancipatoria", "Sujeto Ético y Capacidad Deliberativa"]}, {"id": "04_Promocion_de_la_Salud_Institucional", "title": "Promoción de la Salud Institucional", "group": "salud", "badge": "Núcleo de la Salud", "color": "#2d6a4f", "text": "<h3>Diagnóstico de Campo en el Centro de Salud T-III</h3>\n<p>La autora, laboratorista y promotora de salud con contacto cotidiano en los centros de salud del D.F., analiza cómo se traduce la promoción oficial:</p>\n<blockquote class=\"quote\">«La educación sexual en el centro de salud se concentra en la entrega de material gráfico, condonería, campañas de higiene, control médico y pláticas informativas... todo con un enfoque de prescribir y controlar comportamientos y prácticas sexuales de los adolescentes. A estas acciones se les llama formalmente 'promoción de la salud', pero en la práctica no reflejan un impacto positivo en su aprendizaje (p. 182).»</blockquote>\n\n<h3>Manifestaciones del Modelo Institucional Burocrático:</h3>\n<ul>\n  <li><strong>Condonería Mecánica:</strong> Reparto masivo de preservativos como trámite para inflar estadísticas de metas cumplidas, sin verificar si el joven sabe utilizarlos, conservarlos o colocarlos adecuadamente.</li>\n  <li><strong>Saturación de Impresos (41% del total):</strong> Folletería genérica con ilustraciones anatómicas frías que el 23% de los adolescentes nunca lee y un 26% dice que nadie se tomó el tiempo de explicarles.</li>\n  <li><strong>La 'Vigilancia Epidemiológica' Normatizadora:</strong> El personal asume un rol de policía moral, vigilando y juzgando el inicio de la vida sexual de los jóvenes bajo el prejuicio de que 'son muy inmaduros'.</li>\n</ul>\n\n<h3>La Consecuencia Empírica:</h3>\n<p>El <strong>73% de los adolescentes encuestados en el centro NO piden información</strong> sobre salud sexual ni métodos anticonceptivos por pena, desconfianza y miedo al regaño institucional.</p>", "links": ["Barreras Institucionales en Centro de Salud T-III", "Condonería y Reparto Mecánico de Folletos", "Carta de Ottawa (1986)", "Enfoque de Estilos de Vida"]}, {"id": "05_Enfoque_de_Estilos_de_Vida", "title": "Enfoque de Estilos de Vida", "group": "salud", "badge": "Núcleo de la Salud", "color": "#2d6a4f", "text": "<h3>Crítica al Enfoque Neoliberal de Estilos de Vida</h3>\n<p>A partir del informe Lalonde (1974), las políticas de salud pública adoptaron el concepto de <em>Estilos de Vida</em>, reduciendo la salud a cuatro elementos (biología, medio ambiente, servicios y estilos de vida). La tesis demuestra cómo este enfoque fue distorsionado:</p>\n<blockquote class=\"quote\">«El campo biomédico se apropió del concepto estilos de vida... convirtiéndolo en un objeto de consumo y culpabilizando a quienes no los adoptan. Las prácticas de promoción desde esta visión impulsan medidas para cambiar hábitos individuales (fumar, comer, beber), omitiendo que si el contexto socio-territorial es precario, la salud seguirá deteriorada (p. 89-91).»</blockquote>\n\n<h3>Patógenos e Inmunógenos Conductuales (Matarazzo, 1984):</h3>\n<ul>\n  <li><strong>Patógenos conductuales:</strong> Conductas individuales catalogadas como 'dañinas' (iniciar relaciones sin condón, consumo de alcohol).</li>\n  <li><strong>Inmunógenos conductuales:</strong> Conductas protectoras (abstinencia, uso regular del preservativo, dieta balanceada).</li>\n</ul>\n\n<h3>La Culpabilización del Adolescente:</h3>\n<p>En lugar de cuestionar el hacinamiento urbano, la deserción escolar o la violencia territorial en Iztapalapa, el sistema responsabiliza al joven por haberse infectado de VPH o gonorrea: <em>'te pasó por descuidado e irresponsable'</em>, exonerando al Estado de su deber de brindar educación integral y servicios amigables.</p>", "links": ["Modelo Médico Hegemónico (Menéndez)", "Territorio y Marginación en Iztapalapa", "Promoción de la Salud Institucional"]}, {"id": "06_Sujeto_Etico_y_Capacidad_Deliberativa", "title": "Sujeto Ético y Capacidad Deliberativa", "group": "salud", "badge": "Núcleo de la Salud", "color": "#2d6a4f", "text": "<div>\n<h2>El Adolescente como Sujeto Ético y Deliberativo</h2>\n\n<h3>Ruptura con la 'Minorización' del Joven</h3>\nEl sistema de salud y la sociedad tradicionalmente etiquetan al adolescente como 'rebelde, inmaduro e irresponsable'. Esta etiqueta justifica:\n- Que el médico decida por él.\n- Que se le exija tutor para entregarle anticonceptivos o atenderle una infección.\n- Que se silencie su testimonio en la consulta médica.\n\n<h3>La Propuesta Emancipatoria</h3>\nReconocer al adolescente como <strong>sujeto ético</strong>:\n1. Con capacidad para discernir entre el cuidado y el daño.\n2. Capaz de negociar con su pareja prácticas sexuales seguras y consentidas.\n3. Con derecho a la verdad científica sin censuras moralistas.\n\n- Ver también: [[Proyecto de Vida y Autonomía Corporal]], [[Derechos Sexuales y Reproductivos]], [[Relación Médico-Paciente Asimétrica]].\n\n---\n\n<h4>Conexiones Conceptuales en la Red</h4>\n- [[Definición de Salud (Chapela)]]\n- [[Promoción de la Salud Emancipatoria]]\n- [[Proyecto de Vida y Autonomía Corporal]]\n- [[Derechos Sexuales y Reproductivos]]\n\n<blockquote class=\"quote\"><strong>Cita de la investigación:</strong></blockquote>\n<blockquote class=\"quote\"><em>\"Considera a los seres humanos como sujetos éticos capaces de construir conocimiento independientemente de los expertos o de las instituciones (Chapela, citada en Tesis).\"</em></blockquote>\n</div>", "links": ["Promoción de la Salud Emancipatoria", "Derechos Sexuales y Reproductivos", "Relación Médico-Paciente Asimétrica", "Proyecto de Vida y Autonomía Corporal", "Definición de Salud (Chapela)"]}, {"id": "07_Proyecto_de_Vida_y_Autonomia_Corporal", "title": "Proyecto de Vida y Autonomía Corporal", "group": "salud", "badge": "Núcleo de la Salud", "color": "#2d6a4f", "text": "<div>\n<h2>Proyecto de Vida y Autonomía Corporal</h2>\n\n<h3>La Sexualidad como Dimensión Vital</h3>\nLa sexualidad no puede desligarse del plan de vida general:\n- Si una infección como el VIH o el VPH se adquiere a temprana edad sin información ni acompañamiento médico, la trayectoria escolar y laboral de la persona puede verse truncada o gravemente vulnerada.\n- La autonomía corporal implica decidir <strong>cuándo, con quién y en qué condiciones</strong> iniciar la actividad sexual, sin coerciones de pareja ni prohibiciones oscurantistas.\n\n- Ver también: [[Infecciones de Transmisión Sexual (ITS)]], [[Definición de Salud (Chapela)]], [[Derechos Sexuales y Reproductivos]].\n\n---\n\n<h4>Conexiones Conceptuales en la Red</h4>\n- [[Definición de Salud (Chapela)]]\n- [[Sujeto Ético y Capacidad Deliberativa]]\n- [[Infecciones de Transmisión Sexual (ITS)]]\n- [[Derechos Sexuales y Reproductivos]]\n\n<blockquote class=\"quote\"><strong>Cita de la investigación:</strong></blockquote>\n<blockquote class=\"quote\"><em>\"La educación sexual integral impulsa las capacidades humanas en los y las adolescentes y permite la construcción de un proyecto desde su propia experiencia (Tesis, Introducción).\"</em></blockquote>\n</div>", "links": ["Definición de Salud (Chapela)", "Derechos Sexuales y Reproductivos", "Sujeto Ético y Capacidad Deliberativa", "Infecciones de Transmisión Sexual (ITS)"]}, {"id": "08_Infecciones_de_Transmision_Sexual_ITS", "title": "Infecciones de Transmisión Sexual (ITS)", "group": "its", "badge": "Problema de las ITS", "color": "#9d0208", "text": "<h3>Magnitud Epidemiológica en México (Capítulo 1.4)</h3>\n<p>La investigación expone las cifras de la crisis de salud pública que enfrentan las juventudes:</p>\n<blockquote class=\"quote\">«En muchos países del mundo las Infecciones de Transmisión Sexual (ITS) amenazan la salud y la vida... aproximadamente 685 mil personas se contagian con una de estas enfermedades cada día en el planeta. En México se presentan anualmente SIETE MILLONES de casos nuevos de Infecciones de Transmisión Sexual (ITS), impactando con gran severidad a la población adolescente (p. 27-29).»</blockquote>\n\n<h3>Patógenos y Dinámica de Transmisión:</h3>\n<ul>\n  <li><strong>Más de 30 tipos de agentes patógenos:</strong> Virus (VIH, VPH, Herpes genital tipo 2, Hepatitis B), bacterias (Treponema pallidum / sífilis, Neisseria gonorrhoeae / gonorrea, Chlamydia trachomatis), hongos (Candida albicans) y protozoarios (Trichomonas vaginalis).</li>\n  <li><strong>Edad Temprana de Inicio Sexual:</strong> De acuerdo con el estudio de conducta sexual en estudiantes del D.F., la primera relación ocurre en promedio a los 14.5 años en varones y 15.5 años en mujeres, casi siempre sin preservativo.</li>\n  <li><strong>La Trampa de la 'Monogamia Aparente':</strong> Muchos jóvenes creen que al tener un noviazgo formal están libres de riesgo, ignorando que las ITS pueden cursar de forma asintomática y transmitirse por antecedentes sexuales previos no protegidos.</li>\n</ul>", "links": ["ITS Bacterianas (Sífilis y Gonorrea)", "Virus del Papiloma Humano (VPH)", "Barreras en el Uso del Preservativo", "Vulnerabilidad Biopsicosocial Adolescente", "VIH y SIDA en Jóvenes"]}, {"id": "09_Virus_del_Papiloma_Humano_VPH", "title": "Virus del Papiloma Humano (VPH)", "group": "its", "badge": "Problema de las ITS", "color": "#9d0208", "text": "<h3>El VPH y su Vínculo con el Cáncer Cérvico-Uterino</h3>\n<p>La tesis identifica al Virus del Papiloma Humano como una de las mayores amenazas biológicas silenciadas en la adolescencia:</p>\n<blockquote class=\"quote\">«El Virus del Papiloma Humano (VPH) y el VIH representan las principales afecciones de morbilidad en los jóvenes. El VPH se transmite por contacto sexual directo con piel o mucosas infectadas y constituye el principal factor etiológico del cáncer cérvico-uterino en mujeres jóvenes si no se detecta a tiempo (p. 24).»</blockquote>\n\n<h3>Factores de Riesgo Críticos en Adolescentes:</h3>\n<ul>\n  <li><strong>Vulnerabilidad Celular del Cuello Uterino:</strong> En mujeres menores de 20 años, la zona de transformación escamocolumnar del cérvix se encuentra en pleno desarrollo (ectopia cervical fisiológica), siendo extremadamente permeable al ingreso de genotipos oncogénicos (cepas 16 y 18).</li>\n  <li><strong>Curso Silencioso y Subclínico:</strong> En más del 80% de los casos no produce verrugas ni dolor, dando una falsa sensación de seguridad.</li>\n  <li><strong>Vastedad de Desconocimiento:</strong> En las entrevistas del C.S. Maximiliano Ruíz, los jóvenes confesaron conocer el término SIDA, pero casi la totalidad ignoraba la existencia del VPH y la necesidad del Papanicolaou anual.</li>\n</ul>", "links": ["Aislamiento y Retraso en la Atención", "Vulnerabilidad Biopsicosocial Adolescente", "Infecciones de Transmisión Sexual (ITS)"]}, {"id": "10_VIH_y_SIDA_en_Jovenes", "title": "VIH y SIDA en Jóvenes", "group": "its", "badge": "Problema de las ITS", "color": "#9d0208", "text": "<h3>El Síndrome de Inmunodeficiencia Humana y el Estigma</h3>\n<p>El texto analiza la evolución del VIH en el contexto juvenil urbano:</p>\n<blockquote class=\"quote\">«El SIDA es la más reciente enfermedad de transmisión sexual y se ha transformado en un grave problema de salud a nivel mundial, dada la rapidez de su propagación y su evolución fatal sin tratamiento... En México, la epidemia del SIDA es principalmente por transmisión sexual no protegida (p. 25).»</blockquote>\n\n<h3>Hallazgos Psicosociales en Iztapalapa:</h3>\n<ul>\n  <li><strong>Ilusión de Invulnerabilidad:</strong> Predomina el pensamiento mágico: <em>'a mí no me va a pasar, eso sólo le da a gente de la calle o personas promiscuas'</em>.</li>\n  <li><strong>Pavor al Diagnóstico:</strong> El estigma social asociado al VIH es tan intenso que los adolescentes evitan realizarse la prueba rápida serológica por temor a ser descubiertos y expulsados de sus hogares o círculos de amigos.</li>\n  <li><strong>Falta de Pruebas Rápidas Confidenciales:</strong> En el Centro de Salud T-III, los trámites engorrosos y la falta de privacidad en el laboratorio desincentivan el tamizaje oportuno.</li>\n</ul>", "links": ["Estigma Social, Culpa y Pena", "Aislamiento y Retraso en la Atención", "Infecciones de Transmisión Sexual (ITS)"]}, {"id": "11_ITS_Bacterianas_Sifilis_y_Gonorrea", "title": "ITS Bacterianas (Sífilis y Gonorrea)", "group": "its", "badge": "Problema de las ITS", "color": "#9d0208", "text": "<h3>Infecciones Curables pero Desatendidas</h3>\n<p>El texto advierte sobre las secuelas a largo plazo de las ITS bacterianas en las juventudes:</p>\n<blockquote class=\"quote\">«Tradicionalmente llamadas enfermedades venéreas, la gonorrea y la sífilis siguen registrando tasas elevadas en los adolescentes. Su falta de detección temprana y tratamiento adecuado provoca consecuencias irreversibles como la esterilidad y la enfermedad pélvica inflamatoria (p. 26).»</blockquote>\n\n<h3>Complicaciones Clínicas Documentadas:</h3>\n<ul>\n  <li><strong>Gonorrea y Clamidia:</strong> En varones causa secreción purulenta y ardor miccional; pero en las mujeres jóvenes cursa frecuentemente sin síntomas evidentes, ascendiendo al útero y trompas de Falopio y provocando obstrucción tubaria irreversible (esterilidad permanente).</li>\n  <li><strong>Sífilis (Treponema pallidum):</strong> La lesión primaria (chancro duro) es indolora y cicatriza sola en 3 a 6 semanas, engañando al joven haciéndole creer que 'sanó solo', mientras la bacteria se disemina al sistema nervioso y cardiovascular.</li>\n  <li><strong>Automedicación:</strong> Por vergüenza de acudir al médico, los jóvenes recurren a consejos de amigos o antibióticos mal dosificados que generan cepas resistentes.</li>\n</ul>", "links": ["Barreras Institucionales en Centro de Salud T-III", "Aislamiento y Retraso en la Atención", "Relación Médico-Paciente Asimétrica", "Infecciones de Transmisión Sexual (ITS)"]}, {"id": "12_Vulnerabilidad_Biopsicosocial_Adolescente", "title": "Vulnerabilidad Biopsicosocial Adolescente", "group": "its", "badge": "Problema de las ITS", "color": "#9d0208", "text": "<div>\n<h2>Vulnerabilidad Biopsicosocial en la Adolescencia</h2>\n\n<h3>Tres Niveles de Vulnerabilidad:</h3>\n1. <strong>Nivel Biológico:</strong> Maduración incompleta del aparato reproductor femenino que facilita el microtrauma y la colonización viral o bacteriana.\n2. <strong>Nivel Psicológico:</strong> Labilidad emocional, búsqueda de pertenencia en el grupo de pares, tendencia a la omnipotencia ('a mí no me va a pasar nada').\n3. <strong>Nivel Social:</strong> Carencia de recursos económicos propios (el 71% de los adolescentes encuestados depende financieramente de sus padres), falta de espacios privados y ausencia de diálogo en el hogar.\n\n- Ver también: [[Territorio y Marginación en Iztapalapa]], [[Desigualdad de Género y Poder Sexual]].\n\n---\n\n<h4>Conexiones Conceptuales en la Red</h4>\n- [[Infecciones de Transmisión Sexual (ITS)]]\n- [[Territorio y Marginación en Iztapalapa]]\n- [[Desigualdad de Género y Poder Sexual]]\n- [[Psicología Evolutiva y Duelo de la Infancia]]\n\n<blockquote class=\"quote\"><strong>Cita de la investigación:</strong></blockquote>\n<blockquote class=\"quote\"><em>\"Las tasas desproporcionadamente elevadas en las ITS y los embarazos no deseados no se determinan sólo biológicamente, sino a partir de la vulnerabilidad socio-emocional de los sujetos (Tesis, p. 24).\"</em></blockquote>\n</div>", "links": ["Desigualdad de Género y Poder Sexual", "Territorio y Marginación en Iztapalapa", "Psicología Evolutiva y Duelo de la Infancia", "Infecciones de Transmisión Sexual (ITS)"]}, {"id": "13_Mitos_y_Resistencia_al_Uso_del_Condon", "title": "Barreras en el Uso del Preservativo", "group": "its", "badge": "Problema de las ITS", "color": "#9d0208", "text": "<h3>Mitos y Resistencia al Uso del Condón (Trabajo Cualitativo)</h3>\n<p>Durante el taller de reflexión implementado por la autora con adolescentes del Centro de Salud, salieron a la luz los discursos que frenan la prevención:</p>\n<blockquote class=\"quote\">«Ambos equipos de adolescentes coincidieron en tener información sobre sexualidad, pero admitieron que en la práctica existen grandes barreras: la creencia de que 'con condón no se siente igual', la desconfianza mutua y la pena de adquirirlo (p. 176, 195).»</blockquote>\n\n<h3>Los Pretextos Más Frecuentes Detectados en Iztapalapa:</h3>\n<ul>\n  <li><em>«Resta sensibilidad y placer»:</em> Mito que antepone la inmediatez del goce sin considerar las consecuencias de salud para ambas personas.</li>\n  <li><em>«Si le pido a mi novio que use condón va a pensar que desconfío de él o que tengo otra pareja»:</em> La desconfianza como chantaje emocional afectivo.</li>\n  <li><em>«Si una mujer trae condones en la bolsa es porque es fácil»:</em> Juicio moral machista que castiga a la mujer que toma la iniciativa preventiva.</li>\n  <li><em>«Se rompen muy fácil»:</em> Desconocimiento sobre la técnica adecuada (no usar tijeras ni dientes, sacar el aire de la punta, usar lubricante compatible).</li>\n</ul>", "links": ["Desigualdad de Género y Poder Sexual", "Infecciones de Transmisión Sexual (ITS)", "Condonería y Reparto Mecánico de Folletos"]}, {"id": "14_Estigma_Social_Culpa_y_Pena", "title": "Estigma Social, Culpa y Pena", "group": "its", "badge": "Problema de las ITS", "color": "#9d0208", "text": "<h3>La Carga Social y Moral sobre la Sexualidad Juvenil</h3>\n<p>El estudio demuestra cómo la censura social se convierte en una barrera patogénica:</p>\n<blockquote class=\"quote\">«Apenas empecé a venir porque antes me daba pena... en la colonia creen que si vas al centro de salud es porque vienes embarazada o con alguna enfermedad de transmisión sexual, así que prefieres aguantarte antes de que te vean entrar (Adolescente entrevistada, p. 182).»</blockquote>\n\n<h3>Efectos del Estigma en la Población:</h3>\n<ul>\n  <li><strong>Vigilancia Vecinal Panóptica:</strong> En las colonias de Iztapalapa, el centro de salud es un espacio visible donde los vecinos identifican quién entra a la consulta ginecológica o de planificación.</li>\n  <li><strong>Pena de Comprar Preservativos:</strong> En farmacias locales, los dependientes suelen mirar con reproche o burlarse de los adolescentes que piden condones, inhibiendo su adquisición.</li>\n  <li><strong>Postergación del Diagnóstico:</strong> Cuando un joven nota una lesión genital, calla durante semanas o meses con la esperanza de que 'se le quite sola', agravando el daño tisular.</li>\n</ul>", "links": ["Tabúes Familiares y Silencio Doméstico", "Aislamiento y Retraso en la Atención", "Infecciones de Transmisión Sexual (ITS)"]}, {"id": "15_Aislamiento_y_Retraso_en_la_Atencion", "title": "Aislamiento y Retraso en la Atención", "group": "its", "badge": "Problema de las ITS", "color": "#9d0208", "text": "<h3>Estadísticas de la Encuesta a 60 Adolescentes (Capítulo 6)</h3>\n<p>Los datos cuantitativos recabados por Ramírez Ibarra revelan el aislamiento institucional de los jóvenes:</p>\n<blockquote class=\"quote\">«Al indagar sobre si solicitan información en materia de educación sexual, los resultados muestran un 73% de adolescentes que NO piden información contra un escaso 27% que sí lo hace... Además, el 70% no cuenta con ningún control médico regular en el centro (p. 158-160).»</blockquote>\n\n<h3>Radiografía Estadística del Desamparo:</h3>\n<ul>\n  <li><strong>73% no pide información</strong> sobre sexualidad ni ITS al médico o enfermera.</li>\n  <li><strong>70% no tiene expediente médico activo</strong> ni control periódico en el centro de salud.</li>\n  <li><strong>49% acude forzosamente acompañado de sus padres</strong>, lo que cancela la privacidad necesaria para hablar de vida sexual.</li>\n  <li><strong>48% espera entre 31 y 60 minutos</strong>, y un 27% espera de 1 a 2 horas para recibir una consulta acelerada y superficial.</li>\n</ul>\n\n<p>Esta desconexión institucional hace que las infecciones de transmisión sexual permanezcan invisibles para el sistema hasta que detonan en complicaciones graves o embarazos no deseados.</p>", "links": ["Barreras Institucionales en Centro de Salud T-III", "Infecciones de Transmisión Sexual (ITS)", "Estigma Social, Culpa y Pena"]}, {"id": "16_Modelo_Medico_Hegemonico_Menendez", "title": "Modelo Médico Hegemónico (Menéndez)", "group": "medicina", "badge": "Entorno Médico", "color": "#0077b6", "text": "<h3>Fundamentación Teórica del MMH (Eduardo Menéndez)</h3>\n<p>La autora utiliza las investigaciones del antropólogo Eduardo Menéndez (1979, 1993) para analizar la estructura institucional del centro de salud:</p>\n<blockquote class=\"quote\">«El Modelo Médico Hegemónico (MMH) se define como el conjunto de prácticas, saberes y teorías generadas por el desarrollo de la medicina científica... caracterizado por el biologicismo, la concepción ahistórica, el individualismo, la eficacia pragmática y la relación asimétrica de dominación médico-paciente, donde el objeto de transformación es la enfermedad y no la salud (p. 82-84).»</blockquote>\n\n<h3>Las Cuatro Funciones del MMH Identificadas en la Tesis:</h3>\n<ol>\n  <li><strong>Función Curativo-Preventiva Aparente:</strong> Es la única reconocida explícitamente, pero subordinada a la farmacoterapia y al aislamiento de bacterias.</li>\n  <li><strong>Función Normatizadora:</strong> Define lo 'normal' y lo 'desviado' en la conducta sexual de las personas, imponiendo pautas morales bajo el disfraz de 'criterio médico'.</li>\n  <li><strong>Función de Control Social:</strong> Vigila a los cuerpos para adaptarlos al orden institucional dominante, reduciendo la participación del paciente a una recepción pasiva de órdenes.</li>\n  <li><strong>Reproducción Ideológica:</strong> Consolida la autoridad incuestionable del médico frente al desempoderamiento y minorización del usuario.</li>\n</ol>", "links": ["Burocracia de Despacho y Contabilidad de Pacientes", "Exigencia Arbitraria de Tutor Adulto", "Relación Médico-Paciente Asimétrica", "Promoción de la Salud Institucional"]}, {"id": "17_Relacion_Medico_Paciente_Vertical", "title": "Relación Médico-Paciente Asimétrica", "group": "medicina", "badge": "Entorno Médico", "color": "#0077b6", "text": "<h3>El Trato Punitivo y los Regaños en Consulta</h3>\n<p>Las entrevistas revelaron cómo la asimetría del poder médico lastima la subjetividad adolescente:</p>\n<blockquote class=\"quote\">«La actitud del personal médico y de enfermería muchas veces es impositiva, indiferente o de regaño; los adolescentes señalaron sentirse juzgados con frases como 'son muy jóvenes para aquello'... Una joven relata: 'Me regañó el doctor la otra vez pero según él estuvo bien, porque dice que si andamos con muchachos nos va a ir mal' (p. 183-184).»</blockquote>\n\n<h3>Demandas Unánimes de los Adolescentes:</h3>\n<p>En el estudio de campo, los jóvenes manifestaron qué necesitan realmente del personal de salud:</p>\n<ul>\n  <li><em>«Que los médicos sean más amables y brinden confianza.»</em></li>\n  <li><em>«Que no nos miren con cara de regaño ni le cuenten a nuestras mamás.»</em></li>\n  <li><em>«Que no nos traten como delincuentes por tener novio o querer condones.»</em></li>\n</ul>\n\n<p>Cuando el profesional regaña en lugar de orientar con calidez, corta de raíz la posibilidad de detectar tempranamente una ITS o brindar anticoncepción oportuna.</p>", "links": ["Violación de la NOM-005-SSA2-1993", "Modelo Médico Hegemónico (Menéndez)", "Exigencia Arbitraria de Tutor Adulto"]}, {"id": "18_Barreras_Institucionales_Centro_de_Salud_T3", "title": "Barreras Institucionales en Centro de Salud T-III", "group": "medicina", "badge": "Entorno Médico", "color": "#0077b6", "text": "<div>\n<h2>Barreras Físicas e Institucionales en el Centro de Salud T-III</h2>\n\n<h3>Condiciones del Servicio:</h3>\n- <strong>Tiempos de espera excesivos:</strong> Más del 75% espera entre media hora y más de dos horas.\n- <strong>Incompatibilidad horaria:</strong> Los servicios de promoción y planificación operan de mañana, coincidiendo con el horario escolar de secundarias y prepas de la zona.\n- <strong>Falta de confidencialidad:</strong> Consultorios donde el personal administrativo, de intendencia u otros pacientes entran y salen constantemente sin respetar la privacidad del adolescente.\n\n- Ver también: [[Burocracia de Despacho y Contabilidad de Pacientes]], [[Aislamiento y Retraso en la Atención]].\n\n---\n\n<h4>Conexiones Conceptuales en la Red</h4>\n- [[Modelo Médico Hegemónico (Menéndez)]]\n- [[Burocracia de Despacho y Contabilidad de Pacientes]]\n- [[Aislamiento y Retraso en la Atención]]\n\n<blockquote class=\"quote\"><strong>Cita de la investigación:</strong></blockquote>\n<blockquote class=\"quote\"><em>\"El 48% de los adolescentes han esperado de 31 a 60 minutos, y el 27% de 1 a 2 horas para ser atendidos... factores que desmotivan cualquier acercamiento preventivo (Tesis, p. 162).\"</em></blockquote>\n</div>", "links": ["Modelo Médico Hegemónico (Menéndez)", "Burocracia de Despacho y Contabilidad de Pacientes", "Aislamiento y Retraso en la Atención"]}, {"id": "19_Exigencia_Arbitraria_de_Tutor_Adulto", "title": "Exigencia Arbitraria de Tutor Adulto", "group": "medicina", "badge": "Entorno Médico", "color": "#0077b6", "text": "<h3>La Práctica Ilegal de Exigir Tutor Adulto</h3>\n<p>El hallazgo más contundente de las conclusiones de la tesis denuncia una práctica sistemática contraria a la ley:</p>\n<blockquote class=\"quote\">«En primer lugar, algunos médicos no atienden a los y las adolescentes si éstos no van acompañados por un familiar o adulto que se haga responsable de ella o él, argumentando que es por 'seguridad personal del médico' sintiéndose más confiados de que otro adulto asuma la responsabilidad... Esto viola su derecho de atención (Conclusiones, p. 201).»</blockquote>\n\n<h3>Consecuencias Destructivas de esta Práctica:</h3>\n<ul>\n  <li><strong>Violación de la Intimidad:</strong> Obligar a una adolescente a confesar que tiene vida sexual activa delante de su madre o padre genera pánico a castigos familiares físicos o psicológicos.</li>\n  <li><strong>Abandono de los Jóvenes en Desamparo:</strong> Aquellos adolescentes huérfanos, con familias disfuncionales o en situación de calle son totalmente expulsados del sistema sanitario.</li>\n  <li><strong>Evolución de Infecciones sin Freno:</strong> El joven prefiere quedarse con la infección antes que someterse al escarnio de llevar a un adulto a la fuerza al consultorio.</li>\n</ul>", "links": ["Violación de la NOM-005-SSA2-1993", "Aislamiento y Retraso en la Atención", "Relación Médico-Paciente Asimétrica"]}, {"id": "20_Violacion_de_la_NOM_005_SSA2_1993", "title": "Violación de la NOM-005-SSA2-1993", "group": "medicina", "badge": "Entorno Médico", "color": "#0077b6", "text": "<h3>El Sustento Legal: NOM-005-SSA2-1993 de Planificación Familiar</h3>\n<p>La autora confronta la práctica médica arbitraria con la ley sanitaria vigente en México:</p>\n<blockquote class=\"quote\">«La Norma Oficial Mexicana de los Servicios de Planificación Familiar (NOM-005-SSA2-1993, reformada en el DOF el 21 de enero de 2004) establece que la planificación familiar es un derecho de toda persona, independientemente de su género, edad y estado social o legal. Señala que la consejería debe dar PARTICULAR ATENCIÓN a la población adolescente, con absoluto respeto al derecho a decidir sobre su conducta sexual y al consentimiento informado (p. 201).»</blockquote>\n\n<h3>Numeral 4.1.1 de la Norma Oficial Mexicana:</h3>\n<p><em>«Los servicios de planificación familiar deberán proporcionar información, orientación, consejería, selección, prescripción, contraindicaciones y aplicación de métodos... prevención de infecciones de transmisión sexual... La prestación de los servicios deberá de otorgarse de una manera integral con CALIDAD Y CALIDEZ a toda la población.»</em></p>\n\n<h3>Conclusión Jurídica:</h3>\n<p>Exigir acompañante adulto o negar condones y anticonceptivos a un menor de edad constituye un <strong>acto ilegal sancionable</strong> que transgrede los derechos fundamentales garantizados por el Estado mexicano.</p>", "links": ["Exigencia Arbitraria de Tutor Adulto", "Modelo Médico Hegemónico (Menéndez)", "Derechos Sexuales y Reproductivos"]}, {"id": "21_Condoneria_y_Reparto_Mecanico_de_Folletos", "title": "Condonería y Reparto Mecánico de Folletos", "group": "medicina", "badge": "Entorno Médico", "color": "#0077b6", "text": "<div>\n<h2>La Ineficacia de la 'Folletería' Institucional</h2>\n\n<h3>Datos Cuantitativos de la Investigación:</h3>\n- El <strong>41%</strong> del material otorgado en el centro son folletos de papel.\n- <strong>23%</strong> de los receptores admitió que <strong>nunca lee el material</strong>.\n- <strong>26%</strong> señaló que no le brindaron explicaciones orales y el texto resultaba críptico o irrelevante para sus dudas reales (erotismo, culpa, miedo, negociación de pareja).\n\n- Ver también: [[Promoción de la Salud Institucional]], [[Educación Sexual Integral Emancipatoria]].\n\n---\n\n<h4>Conexiones Conceptuales en la Red</h4>\n- [[Promoción de la Salud Institucional]]\n- [[Mitos y Resistencia al Uso del Condón]]\n- [[Educación Sexual Integral Emancipatoria]]\n\n<blockquote class=\"quote\"><strong>Cita de la investigación:</strong></blockquote>\n<blockquote class=\"quote\"><em>\"El 41% de la información son folletos y trípticos... sin embargo, el 23% de los adolescentes señala que nunca los lee y otro tanto no los entiende (Capítulo 6, p. 165).\"</em></blockquote>\n</div>", "links": ["Educación Sexual Integral Emancipatoria", "Mitos y Resistencia al Uso del Condón", "Promoción de la Salud Institucional"]}, {"id": "22_Burocracia_de_Despacho_y_Contabilidad_de_Pacientes", "title": "Burocracia de Despacho y Contabilidad de Pacientes", "group": "medicina", "badge": "Entorno Médico", "color": "#0077b6", "text": "<h3>Testimonio del Médico Sergio: 'Despachar y Contabilizar'</h3>\n<p>La entrevista a profundidad con el personal de salud del C.S. Maximiliano Ruíz Castañeda arrojó una confesión paradigmática sobre la deshumanización médica:</p>\n<blockquote class=\"quote\">«Nosotros como médicos aquí tenemos que estar inmersos en nuestras tareas de 'despachar' y contabilizar pacientes... si al chavo le interesa saber más sobre sexualidad pues entonces tendría que irse a otro lado o a una temática de grupo... nosotros no tenemos tiempo aquí de adentrarnos (Médico Sergio, p. 184).»</blockquote>\n\n<h3>Factores Estructurales del Problema:</h3>\n<ul>\n  <li><strong>Productivismo Ciego:</strong> La Secretaría de Salud evalúa el rendimiento médico por número de consultas por hora (cuotas cuantitativas de pacientes en la hoja diaria).</li>\n  <li><strong>Consultas de 10 Minutos:</strong> Imposible explorar la biografía afectiva, resolver temores sobre ITS o desmitificar el condón en un lapso tan reducido.</li>\n  <li><strong>Autocrítica Médica Inconclusa:</strong> El mismo médico reconoció: <em>'Nosotros los médicos nos debemos dar cuenta de que los tiempos han cambiado, pero no nos actualizamos como debe de ser'</em>.</li>\n</ul>", "links": ["Barreras Institucionales en Centro de Salud T-III", "Modelo Médico Hegemónico (Menéndez)"]}, {"id": "23_Tension_de_Paradigmas_Cientificos", "title": "Tensión de Paradigmas Científicos", "group": "ciencia", "badge": "Entorno Científico", "color": "#7b2cbf", "text": "<div>\n<h2>Tensión Epistemológica en la Investigación Científica</h2>\n\n<h3>El Dilema Central</h3>\n¿Cómo se produce conocimiento válido en salud?\n- ¿Basta con cuantificar virus, casos y pastillas distribuidas?\n- ¿O es imperativo comprender el sentido que los sujetos atribuyen a su sexualidad, dolor y placer?\n\nLa autora apela al pensamiento complejo de <strong>Edgar Morin</strong> para afirmar que la ciencia de la salud no puede quedarse en etapas tayloristas de estandarización técnica.\n\n- Ver también: [[Paradigma Positivista Biomédico]], [[Paradigma Cualitativo Socio-Crítico]].\n\n---\n\n<h4>Conexiones Conceptuales en la Red</h4>\n- [[Paradigma Positivista Biomédico]]\n- [[Paradigma Cualitativo Socio-Crítico]]\n- [[Metodología Mixta y Grupo de Reflexión]]\n\n<blockquote class=\"quote\"><strong>Cita de la investigación:</strong></blockquote>\n<blockquote class=\"quote\"><em>\"El rigor del razonamiento es más importante que el del cálculo. El cuestionamiento es más importante que el cuestionario (Edgar Morin, epígrafe de la Tesis).\"</em></blockquote>\n</div>", "links": ["Paradigma Positivista Biomédico", "Paradigma Cualitativo Socio-Crítico", "Metodología Mixta y Grupo de Reflexión"]}, {"id": "24_Paradigma_Positivista_Biomedico", "title": "Paradigma Positivista Biomédico", "group": "ciencia", "badge": "Entorno Científico", "color": "#7b2cbf", "text": "<div>\n<h2>El Paradigma Positivista y su Alcance</h2>\n\n<h3>Utilidad y Limitaciones</h3>\n- <strong>Utilidad:</strong> Permitió el aislamiento de patógenos (virus de la inmunodeficiencia humana, Treponema pallidum), el desarrollo de antibióticos y pruebas serológicas.\n- <strong>Ceguera metodológica:</strong> Cree falsamente que brindar información estadística sobre mortalidad ('el SIDA mata a X millones') convencerá a un adolescente de usar condón, ignorando que el deseo y el afecto no se rigen por silogismos matemáticos.\n\n- Ver también: [[Modelo Médico Hegemónico (Menéndez)]], [[Tensión de Paradigmas Científicos]].\n\n---\n\n<h4>Conexiones Conceptuales en la Red</h4>\n- [[Tensión de Paradigmas Científicos]]\n- [[Modelo Médico Hegemónico (Menéndez)]]\n- [[Epidemiología de las ITS]]\n\n<blockquote class=\"quote\"><strong>Cita de la investigación:</strong></blockquote>\n<blockquote class=\"quote\"><em>\"El paradigma biologicista surge en un contexto histórico donde la ciencia necesitaba despojarse del oscurantismo, pero terminó despojando al sujeto de su subjetividad (Capítulo 1, Tesis).\"</em></blockquote>\n</div>", "links": ["Modelo Médico Hegemónico (Menéndez)", "Epidemiología de las ITS", "Tensión de Paradigmas Científicos"]}, {"id": "25_Paradigma_Cualitativo_Socio_Critico", "title": "Paradigma Cualitativo Socio-Crítico", "group": "ciencia", "badge": "Entorno Científico", "color": "#7b2cbf", "text": "<div>\n<h2>El Paradigma Cualitativo Socio-Crítico</h2>\n\n<h3>Fundamentación Hermenéutica</h3>\n- Busca comprender al 'otro' (el adolescente) como un interlocutor válido.\n- Da voz a quienes habitualmente son silenciados en la sala de espera.\n- Revela las fisuras del discurso oficial del Centro de Salud mediante el análisis del discurso de médicos y jóvenes.\n\n- Ver también: [[Metodología Mixta y Grupo de Reflexión]], [[Promoción de la Salud Emancipatoria]].\n\n---\n\n<h4>Conexiones Conceptuales en la Red</h4>\n- [[Tensión de Paradigmas Científicos]]\n- [[Metodología Mixta y Grupo de Reflexión]]\n- [[Promoción de la Salud Emancipatoria]]\n\n<blockquote class=\"quote\"><strong>Cita de la investigación:</strong></blockquote>\n<blockquote class=\"quote\"><em>\"La metodología cualitativa da la oportunidad de nombrar 'palabras' y mirar 'conductas', logrando una comprensión transparente de las múltiples experiencias de los adolescentes (Tesis, p. 5).\"</em></blockquote>\n</div>", "links": ["Promoción de la Salud Emancipatoria", "Tensión de Paradigmas Científicos", "Metodología Mixta y Grupo de Reflexión"]}, {"id": "26_Aporte_de_la_Antropologia_y_Sociologia", "title": "Aporte de la Antropología y Sociología", "group": "ciencia", "badge": "Entorno Científico", "color": "#7b2cbf", "text": "<div>\n<h2>Mirada Antropológica y Sociológica de la Sexualidad</h2>\n\n<h3>Citas Fundamentales:</h3>\nLa autora recupera a <strong>Jeffrey Weeks (1983)</strong> y a <strong>Berger y Luckmann</strong>:\n- <strong>Socialización Primaria:</strong> Aprendizaje de tabúes y silencios en el núcleo familiar.\n- <strong>Socialización Secundaria:</strong> Entrada a la escuela, la pandilla y el centro de salud, donde el adolescente experimenta contradicciones entre sus ideales y la norma impuesta.\n\n- Ver también: [[Adolescencia como Construcción Social]], [[Desigualdad de Género y Poder Sexual]].\n\n---\n\n<h4>Conexiones Conceptuales en la Red</h4>\n- [[Adolescencia como Construcción Social]]\n- [[Desigualdad de Género y Poder Sexual]]\n- [[Aporte de la Psicología Evolutiva]]\n\n<blockquote class=\"quote\"><strong>Cita de la investigación:</strong></blockquote>\n<blockquote class=\"quote\"><em>\"La sexualidad no es una olla de vapor ni una fuerza vital ciega; es el resultado de prácticas sociales, definiciones y luchas entre el poder y la resistencia (Jeffrey Weeks, 1983).\"</em></blockquote>\n</div>", "links": ["Desigualdad de Género y Poder Sexual", "Aporte de la Psicología Evolutiva", "Adolescencia como Construcción Social"]}, {"id": "27_Psicologia_Evolutiva_y_Duelo_de_la_Infancia", "title": "Aporte de la Psicología Evolutiva", "group": "ciencia", "badge": "Entorno Científico", "color": "#7b2cbf", "text": "<div>\n<h2>Psicología de la Adolescencia: Aberastury y Blos</h2>\n\n<h3>Conceptos Teóricos Clave:</h3>\n- <strong>Armida Aberastury (1992):</strong> La adolescencia implica el duelo por el cuerpo infantil, el rol infantil y la pérdida de la protección total de los padres.\n- <strong>Peter Blos (1975):</strong> Segundo proceso de individuación, donde el joven requiere experimentar y confrontar la autoridad para fundar su autonomía.\n- La represión médica intensifica la rebeldía del joven, alejándolo del autocuidado.\n\n- Ver también: [[Vulnerabilidad Biopsicosocial Adolescente]], [[Adolescencia como Construcción Social]].\n\n---\n\n<h4>Conexiones Conceptuales en la Red</h4>\n- [[Vulnerabilidad Biopsicosocial Adolescente]]\n- [[Aporte de la Antropología y Sociología]]\n\n<blockquote class=\"quote\"><strong>Cita de la investigación:</strong></blockquote>\n<blockquote class=\"quote\"><em>\"Armida Aberastury y Peter Blos definen este periodo por la inestabilidad extrema y el desamparo generado por la desidealización de los padres, reconstruyendo el concepto de sí mismo (Capítulo 1, p. 15).\"</em></blockquote>\n</div>", "links": ["Adolescencia como Construcción Social", "Vulnerabilidad Biopsicosocial Adolescente", "Aporte de la Antropología y Sociología"]}, {"id": "28_Metodologia_Mixta_y_Grupo_de_Reflexion", "title": "Metodología Mixta y Grupo de Reflexión", "group": "ciencia", "badge": "Entorno Científico", "color": "#7b2cbf", "text": "<div>\n<h2>Metodología de la Investigación (UACM)</h2>\n\n<h3>Fases del Estudio Empírico:</h3>\n1. <strong>Fase Cuantitativa:</strong> Cuestionario sociodemográfico y de percepción de servicios a una muestra aleatoria de 60 adolescentes (hombres y mujeres de 15 a 19 años) en salas de espera y consultorios del C.S. Maximiliano Ruíz Castañeda.\n2. <strong>Fase Cualitativa:</strong> Entrevistas a médicos, enfermeras y trabajadoras sociales.\n3. <strong>Grupo de Reflexión / Taller Dialógico:</strong> Espacio horizontal donde los adolescentes expresaron vivencias, desmitificaron el condón y manifestaron sus temores ante las ITS.\n\n- Ver también: [[Tensión de Paradigmas Científicos]], [[Paradigma Cualitativo Socio-Crítico]].\n\n---\n\n<h4>Conexiones Conceptuales en la Red</h4>\n- [[Tensión de Paradigmas Científicos]]\n- [[Paradigma Cualitativo Socio-Crítico]]\n- [[Educación Sexual Integral Emancipatoria]]\n\n<blockquote class=\"quote\"><strong>Cita de la investigación:</strong></blockquote>\n<blockquote class=\"quote\"><em>\"Se aplicó un cuestionario a 60 adolescentes de manera aleatoria, complementado con entrevistas semiestructuradas y un grupo de reflexión que aportó una rica interacción de experiencias (Capítulo 5).\"</em></blockquote>\n</div>", "links": ["Educación Sexual Integral Emancipatoria", "Paradigma Cualitativo Socio-Crítico", "Tensión de Paradigmas Científicos"]}, {"id": "29_Adolescencia_como_Construccion_Social", "title": "Adolescencia como Construcción Social", "group": "social", "badge": "Entorno Social", "color": "#a68a56", "text": "<div>\n<h2>La Adolescencia como Construcción Social e Histórica</h2>\n\n<h3>Más Allá de la Pubertad Fisiológica</h3>\nMientras la pubertad comprende cambios hormonales y corporales universales, la <strong>adolescencia</strong> como categoría depende de:\n- Las estructuras económicas (en sectores populares, muchos jóvenes trabajan precozmente o asumen labores de cuidado familiar).\n- Las normas jurídicas sobre minoría y mayoría de edad.\n- Los mandatos mediáticos sobre el cuerpo y el consumo.\n\n- Ver también: [[Territorio y Marginación en Iztapalapa]], [[Aporte de la Antropología y Sociología]].\n\n---\n\n<h4>Conexiones Conceptuales en la Red</h4>\n- [[Territorio y Marginación en Iztapalapa]]\n- [[Aporte de la Antropología y Sociología]]\n- [[Desigualdad de Género y Poder Sexual]]\n\n<blockquote class=\"quote\"><strong>Cita de la investigación:</strong></blockquote>\n<blockquote class=\"quote\"><em>\"La adolescencia es una construcción social... no todos los grupos humanos han vivido la adolescencia de la misma forma; está determinada por la inserción laboral y cultural (Capítulo 1, p. 12).\"</em></blockquote>\n</div>", "links": ["Desigualdad de Género y Poder Sexual", "Territorio y Marginación en Iztapalapa", "Aporte de la Antropología y Sociología"]}, {"id": "30_Territorio_y_Marginacion_en_Iztapalapa", "title": "Territorio y Marginación en Iztapalapa", "group": "social", "badge": "Entorno Social", "color": "#a68a56", "text": "<h3>El Contexto Territorial de Iztapalapa (Capítulo 4)</h3>\n<p>La investigación delimita con detalle las coordenadas materiales de la demarcación estudiada:</p>\n<blockquote class=\"quote\">«La delegación Iztapalapa es la más poblada del Distrito Federal... presenta contrastes sociales profundos, zonas de alta marginación, escasez crónica de agua potable, hacinamiento habitacional y una demanda desbordada sobre los centros de salud de primer nivel (p. 102-116).»</blockquote>\n\n<h3>Datos Sociodemográficos de los 60 Adolescentes Encuestados (Capítulo 6):</h3>\n<ul>\n  <li><strong>Dependencia Económica Absoluta:</strong> El <strong>71%</strong> de los jóvenes depende financieramente de sus padres; sólo el 15% tiene ingresos propios autosuficientes.</li>\n  <li><strong>Ocupación:</strong> 62% estudiantes (secundaria y bachillerato), 10% empleados, 10% estudia y trabaja, 10% desempleados y 5% otras ocupaciones informales.</li>\n  <li><strong>Hogar y Convivencia:</strong> 82% vive en casa de sus progenitores en condiciones de hacinamiento familiar, lo que suprime los espacios de intimidad y diálogo confidencial.</li>\n</ul>", "links": ["Barreras Institucionales en Centro de Salud T-III", "Adolescencia como Construcción Social", "Vulnerabilidad Biopsicosocial Adolescente"]}, {"id": "31_Desigualdad_de_Genero_y_Poder_Sexual", "title": "Desigualdad de Género y Poder Sexual", "group": "social", "badge": "Entorno Social", "color": "#a68a56", "text": "<h3>Desigualdad de Género y Asimetría en la Negociación Coital</h3>\n<p>El análisis cualitativo desnuda cómo el machismo tradicional se traduce en contagios de ITS:</p>\n<blockquote class=\"quote\">«Los roles tradicionales de género imponen a las adolescentes una subordinación estructural... Si una mujer propone o exige el uso del condón, suele ser cuestionada en su fidelidad o calificada peyorativamente; mientras que al varón se le tolera y festeja el inicio precoz y la multiplicidad de parejas sin protección (p. 195).»</blockquote>\n\n<h3>La Doble Moral Cultural Identificada:</h3>\n<ul>\n  <li><strong>Mandato de Pasividad Femenina:</strong> Se educa a las mujeres para complacer al varón y tolerar sus imposiciones eróticas con tal de no perder la relación afectiva.</li>\n  <li><strong>Chantaje Emocional:</strong> Varones que responden ante el condón con reproches: <em>'si me quisieras de verdad confiarías en mí'</em>.</li>\n  <li><strong>Mayor Riesgo en Mujeres:</strong> Esta asimetría de poder explica por qué las adolescentes son las más vulnerables a adquirir VPH y VIH en relaciones de pareja supuestamente 'estables'.</li>\n</ul>", "links": ["Derechos Sexuales y Reproductivos", "Mitos y Resistencia al Uso del Condón", "Infecciones de Transmisión Sexual (ITS)"]}, {"id": "32_Tabues_Familiares_y_Silencio_Domestico", "title": "Tabúes Familiares y Silencio Doméstico", "group": "social", "badge": "Entorno Social", "color": "#a68a56", "text": "<div>\n<h2>Tabúes Familiares y Represión Cultural</h2>\n\n<h3>La Paradoja del Silencio</h3>\nLos padres de familia encuestados desean que sus hijos 'no se enfermen ni se embaracen', pero evitan pronunciar la palabra 'sexo' o 'condón' por vergüenza.\nAl silenciarse en la familia y desatenderse en el centro de salud, los adolescentes aprenden sobre sexualidad a través de rumores distorsionados, pornografía comercial o mitos entre pares.\n\n- Ver también: [[Estigma Social, Culpa y Pena]], [[Educación Sexual Integral Emancipatoria]].\n\n---\n\n<h4>Conexiones Conceptuales en la Red</h4>\n- [[Estigma Social, Culpa y Pena]]\n- [[Adolescencia como Construcción Social]]\n- [[Educación Sexual Integral Emancipatoria]]\n\n<blockquote class=\"quote\"><strong>Cita de la investigación:</strong></blockquote>\n<blockquote class=\"quote\"><em>\"Tanto madres como padres sienten pena de hablar de sexo... esta reproducción cultural de la represión lleva a los adolescentes a iniciar su vida sexual sin elementos preventivos (Tesis, p. 177).\"</em></blockquote>\n</div>", "links": ["Adolescencia como Construcción Social", "Educación Sexual Integral Emancipatoria", "Estigma Social, Culpa y Pena"]}, {"id": "33_Derechos_Sexuales_y_Reproductivos", "title": "Derechos Sexuales y Reproductivos", "group": "social", "badge": "Entorno Social", "color": "#a68a56", "text": "<div>\n<h2>Derechos Sexuales y Reproductivos de las Juventudes</h2>\n\n<h3>Derechos Fundamentales Reclamados en la Tesis:</h3>\n1. <strong>Derecho a la información veraz, laica y científica</strong> sobre sexualidad e ITS.\n2. <strong>Derecho a la confidencialidad y privacidad</strong> en los servicios médicos.\n3. <strong>Derecho a recibir métodos anticonceptivos y de barrera sin autorización paterna</strong>.\n4. <strong>Derecho al placer consensuado y a una vida libre de violencia sexual</strong>.\n\n- Ver también: [[Violación de la NOM-005-SSA2-1993]], [[Sujeto Ético y Capacidad Deliberativa]].\n\n---\n\n<h4>Conexiones Conceptuales en la Red</h4>\n- [[Violación de la NOM-005-SSA2-1993]]\n- [[Sujeto Ético y Capacidad Deliberativa]]\n- [[Educación Sexual Integral Emancipatoria]]\n\n<blockquote class=\"quote\"><strong>Cita de la investigación:</strong></blockquote>\n<blockquote class=\"quote\"><em>\"El campo de la salud sexual y los derechos sexuales de los y las adolescentes es todavía un campo marginal que requiere ser reivindicado con urgencia (Tesis, p. 6 y Conclusiones).\"</em></blockquote>\n</div>", "links": ["Violación de la NOM-005-SSA2-1993", "Educación Sexual Integral Emancipatoria", "Sujeto Ético y Capacidad Deliberativa"]}, {"id": "34_Educacion_Sexual_Integral_Emancipatoria", "title": "Educación Sexual Integral Emancipatoria", "group": "social", "badge": "Entorno Social", "color": "#a68a56", "text": "<h3>La Propuesta Integral de Transformación de la Autora</h3>\n<p>En el cierre de su tesis de licenciatura de la UACM, María Eugenia Ramírez Ibarra formula una hoja de ruta para transformar las políticas sanitarias:</p>\n<blockquote class=\"quote\">«Considero que mediante prácticas de promoción de la salud emancipatoria se pueden revertir los problemas iniciales, permitiendo a los sujetos su autoconstrucción ética y la defensa activa de sus derechos en la atención de la salud (Conclusiones, p. 201-203).»</blockquote>\n\n<h3>Los Cuatro Pilares Transformadores:</h3>\n<ol>\n  <li><strong>Sustituir la Charla Magistral por el Taller Dialógico:</strong> Implementar espacios pedagógicos grupales horizontales donde jóvenes hombres y mujeres dialoguen sobre sus afectos, derriben mitos del condón y expresen sus dudas sin juicio moral.</li>\n  <li><strong>Sensibilización Bioética Obligatoria del Personal de Salud:</strong> Capacitar a médicos, enfermeras y trabajadoras sociales en derechos humanos, perspectiva de género y erradicación del adultocentrismo punitivo.</li>\n  <li><strong>Creación de Consultorios y Servicios Amigables Reales:</strong> Horarios vespertinos para estudiantes, garantía total de confidencialidad y atención irrestricta sin exigencia de tutores, cumpliendo la NOM-005.</li>\n  <li><strong>Vinculación Intersectorial Comunitaria:</strong> Llevar la promoción de la salud fuera de las cuatro paredes del consultorio, articulando al Centro de Salud con escuelas secundarias, bachilleratos técnicos y colectivos juveniles de Iztapalapa.</li>\n</ol>", "links": ["Promoción de la Salud Emancipatoria", "Infecciones de Transmisión Sexual (ITS)", "Sujeto Ético y Capacidad Deliberativa", "Derechos Sexuales y Reproductivos"]}];
+        const rawLinks = [{"source": "01_Definicion_de_Salud_Chapela", "target": "03_Promocion_de_la_Salud_Emancipatoria"}, {"source": "01_Definicion_de_Salud_Chapela", "target": "07_Proyecto_de_Vida_y_Autonomia_Corporal"}, {"source": "01_Definicion_de_Salud_Chapela", "target": "02_Carta_de_Ottawa_1986"}, {"source": "01_Definicion_de_Salud_Chapela", "target": "06_Sujeto_Etico_y_Capacidad_Deliberativa"}, {"source": "01_Definicion_de_Salud_Chapela", "target": "08_Infecciones_de_Transmision_Sexual_ITS"}, {"source": "02_Carta_de_Ottawa_1986", "target": "01_Definicion_de_Salud_Chapela"}, {"source": "02_Carta_de_Ottawa_1986", "target": "30_Territorio_y_Marginacion_en_Iztapalapa"}, {"source": "02_Carta_de_Ottawa_1986", "target": "03_Promocion_de_la_Salud_Emancipatoria"}, {"source": "02_Carta_de_Ottawa_1986", "target": "04_Promocion_de_la_Salud_Institucional"}, {"source": "03_Promocion_de_la_Salud_Emancipatoria", "target": "01_Definicion_de_Salud_Chapela"}, {"source": "03_Promocion_de_la_Salud_Emancipatoria", "target": "16_Modelo_Medico_Hegemonico_Menendez"}, {"source": "03_Promocion_de_la_Salud_Emancipatoria", "target": "34_Educacion_Sexual_Integral_Emancipatoria"}, {"source": "03_Promocion_de_la_Salud_Emancipatoria", "target": "06_Sujeto_Etico_y_Capacidad_Deliberativa"}, {"source": "04_Promocion_de_la_Salud_Institucional", "target": "18_Barreras_Institucionales_Centro_de_Salud_T3"}, {"source": "04_Promocion_de_la_Salud_Institucional", "target": "21_Condoneria_y_Reparto_Mecanico_de_Folletos"}, {"source": "04_Promocion_de_la_Salud_Institucional", "target": "02_Carta_de_Ottawa_1986"}, {"source": "04_Promocion_de_la_Salud_Institucional", "target": "05_Enfoque_de_Estilos_de_Vida"}, {"source": "05_Enfoque_de_Estilos_de_Vida", "target": "16_Modelo_Medico_Hegemonico_Menendez"}, {"source": "05_Enfoque_de_Estilos_de_Vida", "target": "30_Territorio_y_Marginacion_en_Iztapalapa"}, {"source": "05_Enfoque_de_Estilos_de_Vida", "target": "04_Promocion_de_la_Salud_Institucional"}, {"source": "06_Sujeto_Etico_y_Capacidad_Deliberativa", "target": "03_Promocion_de_la_Salud_Emancipatoria"}, {"source": "06_Sujeto_Etico_y_Capacidad_Deliberativa", "target": "33_Derechos_Sexuales_y_Reproductivos"}, {"source": "06_Sujeto_Etico_y_Capacidad_Deliberativa", "target": "17_Relacion_Medico_Paciente_Vertical"}, {"source": "06_Sujeto_Etico_y_Capacidad_Deliberativa", "target": "07_Proyecto_de_Vida_y_Autonomia_Corporal"}, {"source": "06_Sujeto_Etico_y_Capacidad_Deliberativa", "target": "01_Definicion_de_Salud_Chapela"}, {"source": "07_Proyecto_de_Vida_y_Autonomia_Corporal", "target": "01_Definicion_de_Salud_Chapela"}, {"source": "07_Proyecto_de_Vida_y_Autonomia_Corporal", "target": "33_Derechos_Sexuales_y_Reproductivos"}, {"source": "07_Proyecto_de_Vida_y_Autonomia_Corporal", "target": "06_Sujeto_Etico_y_Capacidad_Deliberativa"}, {"source": "07_Proyecto_de_Vida_y_Autonomia_Corporal", "target": "08_Infecciones_de_Transmision_Sexual_ITS"}, {"source": "08_Infecciones_de_Transmision_Sexual_ITS", "target": "11_ITS_Bacterianas_Sifilis_y_Gonorrea"}, {"source": "08_Infecciones_de_Transmision_Sexual_ITS", "target": "09_Virus_del_Papiloma_Humano_VPH"}, {"source": "08_Infecciones_de_Transmision_Sexual_ITS", "target": "13_Mitos_y_Resistencia_al_Uso_del_Condon"}, {"source": "08_Infecciones_de_Transmision_Sexual_ITS", "target": "12_Vulnerabilidad_Biopsicosocial_Adolescente"}, {"source": "08_Infecciones_de_Transmision_Sexual_ITS", "target": "10_VIH_y_SIDA_en_Jovenes"}, {"source": "09_Virus_del_Papiloma_Humano_VPH", "target": "15_Aislamiento_y_Retraso_en_la_Atencion"}, {"source": "09_Virus_del_Papiloma_Humano_VPH", "target": "12_Vulnerabilidad_Biopsicosocial_Adolescente"}, {"source": "09_Virus_del_Papiloma_Humano_VPH", "target": "08_Infecciones_de_Transmision_Sexual_ITS"}, {"source": "10_VIH_y_SIDA_en_Jovenes", "target": "14_Estigma_Social_Culpa_y_Pena"}, {"source": "10_VIH_y_SIDA_en_Jovenes", "target": "15_Aislamiento_y_Retraso_en_la_Atencion"}, {"source": "10_VIH_y_SIDA_en_Jovenes", "target": "08_Infecciones_de_Transmision_Sexual_ITS"}, {"source": "11_ITS_Bacterianas_Sifilis_y_Gonorrea", "target": "18_Barreras_Institucionales_Centro_de_Salud_T3"}, {"source": "11_ITS_Bacterianas_Sifilis_y_Gonorrea", "target": "15_Aislamiento_y_Retraso_en_la_Atencion"}, {"source": "11_ITS_Bacterianas_Sifilis_y_Gonorrea", "target": "17_Relacion_Medico_Paciente_Vertical"}, {"source": "11_ITS_Bacterianas_Sifilis_y_Gonorrea", "target": "08_Infecciones_de_Transmision_Sexual_ITS"}, {"source": "12_Vulnerabilidad_Biopsicosocial_Adolescente", "target": "31_Desigualdad_de_Genero_y_Poder_Sexual"}, {"source": "12_Vulnerabilidad_Biopsicosocial_Adolescente", "target": "30_Territorio_y_Marginacion_en_Iztapalapa"}, {"source": "12_Vulnerabilidad_Biopsicosocial_Adolescente", "target": "08_Infecciones_de_Transmision_Sexual_ITS"}, {"source": "13_Mitos_y_Resistencia_al_Uso_del_Condon", "target": "31_Desigualdad_de_Genero_y_Poder_Sexual"}, {"source": "13_Mitos_y_Resistencia_al_Uso_del_Condon", "target": "08_Infecciones_de_Transmision_Sexual_ITS"}, {"source": "13_Mitos_y_Resistencia_al_Uso_del_Condon", "target": "21_Condoneria_y_Reparto_Mecanico_de_Folletos"}, {"source": "14_Estigma_Social_Culpa_y_Pena", "target": "32_Tabues_Familiares_y_Silencio_Domestico"}, {"source": "14_Estigma_Social_Culpa_y_Pena", "target": "15_Aislamiento_y_Retraso_en_la_Atencion"}, {"source": "14_Estigma_Social_Culpa_y_Pena", "target": "08_Infecciones_de_Transmision_Sexual_ITS"}, {"source": "15_Aislamiento_y_Retraso_en_la_Atencion", "target": "18_Barreras_Institucionales_Centro_de_Salud_T3"}, {"source": "15_Aislamiento_y_Retraso_en_la_Atencion", "target": "08_Infecciones_de_Transmision_Sexual_ITS"}, {"source": "15_Aislamiento_y_Retraso_en_la_Atencion", "target": "14_Estigma_Social_Culpa_y_Pena"}, {"source": "16_Modelo_Medico_Hegemonico_Menendez", "target": "22_Burocracia_de_Despacho_y_Contabilidad_de_Pacientes"}, {"source": "16_Modelo_Medico_Hegemonico_Menendez", "target": "19_Exigencia_Arbitraria_de_Tutor_Adulto"}, {"source": "16_Modelo_Medico_Hegemonico_Menendez", "target": "17_Relacion_Medico_Paciente_Vertical"}, {"source": "16_Modelo_Medico_Hegemonico_Menendez", "target": "04_Promocion_de_la_Salud_Institucional"}, {"source": "17_Relacion_Medico_Paciente_Vertical", "target": "20_Violacion_de_la_NOM_005_SSA2_1993"}, {"source": "17_Relacion_Medico_Paciente_Vertical", "target": "16_Modelo_Medico_Hegemonico_Menendez"}, {"source": "17_Relacion_Medico_Paciente_Vertical", "target": "19_Exigencia_Arbitraria_de_Tutor_Adulto"}, {"source": "18_Barreras_Institucionales_Centro_de_Salud_T3", "target": "16_Modelo_Medico_Hegemonico_Menendez"}, {"source": "18_Barreras_Institucionales_Centro_de_Salud_T3", "target": "22_Burocracia_de_Despacho_y_Contabilidad_de_Pacientes"}, {"source": "18_Barreras_Institucionales_Centro_de_Salud_T3", "target": "15_Aislamiento_y_Retraso_en_la_Atencion"}, {"source": "19_Exigencia_Arbitraria_de_Tutor_Adulto", "target": "20_Violacion_de_la_NOM_005_SSA2_1993"}, {"source": "19_Exigencia_Arbitraria_de_Tutor_Adulto", "target": "15_Aislamiento_y_Retraso_en_la_Atencion"}, {"source": "19_Exigencia_Arbitraria_de_Tutor_Adulto", "target": "17_Relacion_Medico_Paciente_Vertical"}, {"source": "20_Violacion_de_la_NOM_005_SSA2_1993", "target": "19_Exigencia_Arbitraria_de_Tutor_Adulto"}, {"source": "20_Violacion_de_la_NOM_005_SSA2_1993", "target": "16_Modelo_Medico_Hegemonico_Menendez"}, {"source": "20_Violacion_de_la_NOM_005_SSA2_1993", "target": "33_Derechos_Sexuales_y_Reproductivos"}, {"source": "21_Condoneria_y_Reparto_Mecanico_de_Folletos", "target": "34_Educacion_Sexual_Integral_Emancipatoria"}, {"source": "21_Condoneria_y_Reparto_Mecanico_de_Folletos", "target": "04_Promocion_de_la_Salud_Institucional"}, {"source": "22_Burocracia_de_Despacho_y_Contabilidad_de_Pacientes", "target": "18_Barreras_Institucionales_Centro_de_Salud_T3"}, {"source": "22_Burocracia_de_Despacho_y_Contabilidad_de_Pacientes", "target": "16_Modelo_Medico_Hegemonico_Menendez"}, {"source": "23_Tension_de_Paradigmas_Cientificos", "target": "24_Paradigma_Positivista_Biomedico"}, {"source": "23_Tension_de_Paradigmas_Cientificos", "target": "25_Paradigma_Cualitativo_Socio_Critico"}, {"source": "23_Tension_de_Paradigmas_Cientificos", "target": "28_Metodologia_Mixta_y_Grupo_de_Reflexion"}, {"source": "24_Paradigma_Positivista_Biomedico", "target": "16_Modelo_Medico_Hegemonico_Menendez"}, {"source": "24_Paradigma_Positivista_Biomedico", "target": "23_Tension_de_Paradigmas_Cientificos"}, {"source": "25_Paradigma_Cualitativo_Socio_Critico", "target": "03_Promocion_de_la_Salud_Emancipatoria"}, {"source": "25_Paradigma_Cualitativo_Socio_Critico", "target": "23_Tension_de_Paradigmas_Cientificos"}, {"source": "25_Paradigma_Cualitativo_Socio_Critico", "target": "28_Metodologia_Mixta_y_Grupo_de_Reflexion"}, {"source": "26_Aporte_de_la_Antropologia_y_Sociologia", "target": "31_Desigualdad_de_Genero_y_Poder_Sexual"}, {"source": "26_Aporte_de_la_Antropologia_y_Sociologia", "target": "27_Psicologia_Evolutiva_y_Duelo_de_la_Infancia"}, {"source": "26_Aporte_de_la_Antropologia_y_Sociologia", "target": "29_Adolescencia_como_Construccion_Social"}, {"source": "27_Psicologia_Evolutiva_y_Duelo_de_la_Infancia", "target": "29_Adolescencia_como_Construccion_Social"}, {"source": "27_Psicologia_Evolutiva_y_Duelo_de_la_Infancia", "target": "12_Vulnerabilidad_Biopsicosocial_Adolescente"}, {"source": "27_Psicologia_Evolutiva_y_Duelo_de_la_Infancia", "target": "26_Aporte_de_la_Antropologia_y_Sociologia"}, {"source": "28_Metodologia_Mixta_y_Grupo_de_Reflexion", "target": "34_Educacion_Sexual_Integral_Emancipatoria"}, {"source": "28_Metodologia_Mixta_y_Grupo_de_Reflexion", "target": "25_Paradigma_Cualitativo_Socio_Critico"}, {"source": "28_Metodologia_Mixta_y_Grupo_de_Reflexion", "target": "23_Tension_de_Paradigmas_Cientificos"}, {"source": "29_Adolescencia_como_Construccion_Social", "target": "31_Desigualdad_de_Genero_y_Poder_Sexual"}, {"source": "29_Adolescencia_como_Construccion_Social", "target": "30_Territorio_y_Marginacion_en_Iztapalapa"}, {"source": "29_Adolescencia_como_Construccion_Social", "target": "26_Aporte_de_la_Antropologia_y_Sociologia"}, {"source": "30_Territorio_y_Marginacion_en_Iztapalapa", "target": "18_Barreras_Institucionales_Centro_de_Salud_T3"}, {"source": "30_Territorio_y_Marginacion_en_Iztapalapa", "target": "29_Adolescencia_como_Construccion_Social"}, {"source": "30_Territorio_y_Marginacion_en_Iztapalapa", "target": "12_Vulnerabilidad_Biopsicosocial_Adolescente"}, {"source": "31_Desigualdad_de_Genero_y_Poder_Sexual", "target": "33_Derechos_Sexuales_y_Reproductivos"}, {"source": "31_Desigualdad_de_Genero_y_Poder_Sexual", "target": "08_Infecciones_de_Transmision_Sexual_ITS"}, {"source": "32_Tabues_Familiares_y_Silencio_Domestico", "target": "29_Adolescencia_como_Construccion_Social"}, {"source": "32_Tabues_Familiares_y_Silencio_Domestico", "target": "34_Educacion_Sexual_Integral_Emancipatoria"}, {"source": "32_Tabues_Familiares_y_Silencio_Domestico", "target": "14_Estigma_Social_Culpa_y_Pena"}, {"source": "33_Derechos_Sexuales_y_Reproductivos", "target": "20_Violacion_de_la_NOM_005_SSA2_1993"}, {"source": "33_Derechos_Sexuales_y_Reproductivos", "target": "34_Educacion_Sexual_Integral_Emancipatoria"}, {"source": "33_Derechos_Sexuales_y_Reproductivos", "target": "06_Sujeto_Etico_y_Capacidad_Deliberativa"}, {"source": "34_Educacion_Sexual_Integral_Emancipatoria", "target": "03_Promocion_de_la_Salud_Emancipatoria"}, {"source": "34_Educacion_Sexual_Integral_Emancipatoria", "target": "08_Infecciones_de_Transmision_Sexual_ITS"}, {"source": "34_Educacion_Sexual_Integral_Emancipatoria", "target": "06_Sujeto_Etico_y_Capacidad_Deliberativa"}, {"source": "34_Educacion_Sexual_Integral_Emancipatoria", "target": "33_Derechos_Sexuales_y_Reproductivos"}];
+
+        const canvas = document.getElementById("graphCanvas");
+        const ctx = canvas.getContext("2d");
+
+        let width, height;
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener("resize", resize);
+        resize();
+
+        // Node lookup map
+        const nodeMap = {};
+        rawNodes.forEach((n, idx) => {
+            const angle = (idx / rawNodes.length) * Math.PI * 2;
+            const dist = 180 + Math.random() * 220;
+            n.x = width/2 + Math.cos(angle) * dist;
+            n.y = height/2 + Math.sin(angle) * dist;
+            n.vx = 0; n.vy = 0;
+            n.radius = 16;
+            nodeMap[n.id] = n;
+        });
+
+        const links = rawLinks.map(l => ({
+            source: nodeMap[l.source],
+            target: nodeMap[l.target]
+        })).filter(l => l.source && l.target);
+
+        // State variables
+        let zoom = 1.0;
+        let panX = 0, panY = 0;
+        let activeFilter = 'todos';
+        let selectedNode = null;
+        let showRelatedOnCanvas = false;
+        let showAllGlobalLinks = true;
+        let fontSizeBase = 14;
+
+        let draggedNode = null;
+        let isTouching = false;
+        let startDist = 0;
+        let lastTouchX = 0, lastTouchY = 0;
+
+        function simulate() {
+            // Repulsion
+            for (let i = 0; i < rawNodes.length; i++) {
+                for (let j = i + 1; j < rawNodes.length; j++) {
+                    const a = rawNodes[i];
+                    const b = rawNodes[j];
+                    const dx = b.x - a.x;
+                    const dy = b.y - a.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+                    if (dist < 280) {
+                        const force = (280 - dist) / 280 * 0.7;
+                        const fx = (dx / dist) * force;
+                        const fy = (dy / dist) * force;
+                        a.vx -= fx; a.vy -= fy;
+                        b.vx += fx; b.vy += fy;
+                    }
+                }
+            }
+
+            // Spring attraction
+            links.forEach(l => {
+                const dx = l.target.x - l.source.x;
+                const dy = l.target.y - l.source.y;
+                const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+                const force = (dist - 130) * 0.006;
+                const fx = (dx / dist) * force;
+                const fy = (dy / dist) * force;
+                l.source.vx += fx; l.source.vy += fy;
+                l.target.vx -= fx; l.target.vy -= fy;
+            });
+
+            // Center gravity & dampening
+            rawNodes.forEach(n => {
+                if (n !== draggedNode) {
+                    n.vx += (width/2 - n.x) * 0.0006;
+                    n.vy += (height/2 - n.y) * 0.0006;
+                    n.x += n.vx;
+                    n.y += n.vy;
+                    n.vx *= 0.86;
+                    n.vy *= 0.86;
+                }
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.save();
+            ctx.translate(panX, panY);
+            ctx.scale(zoom, zoom);
+
+            const connectedNodeIds = new Set();
+            if (selectedNode) {
+                links.forEach(l => {
+                    if (l.source === selectedNode) connectedNodeIds.add(l.target.id);
+                    if (l.target === selectedNode) connectedNodeIds.add(l.source.id);
+                });
+            }
+
+            // Draw Links
+            links.forEach(l => {
+                const isSelectedEdge = selectedNode && (l.source === selectedNode || l.target === selectedNode);
+                
+                // If user chose to hide global links and this edge is not related to selected node, don't draw
+                if (!showAllGlobalLinks && !isSelectedEdge) return;
+
+                if (selectedNode) {
+                    if (isSelectedEdge && showRelatedOnCanvas) {
+                        ctx.lineWidth = 2.4;
+                        ctx.strokeStyle = "rgba(56, 189, 248, 0.9)";
+                    } else if (isSelectedEdge && !showRelatedOnCanvas) {
+                        ctx.lineWidth = 0.8;
+                        ctx.strokeStyle = "rgba(56, 189, 248, 0.2)";
+                    } else {
+                        ctx.lineWidth = 0.4;
+                        ctx.strokeStyle = "rgba(51, 65, 85, 0.05)";
+                    }
+                } else {
+                    const matches = (activeFilter === 'todos' || l.source.group === activeFilter || l.target.group === activeFilter);
+                    ctx.lineWidth = matches ? 1.0 : 0.4;
+                    ctx.strokeStyle = matches ? "rgba(148, 163, 184, 0.2)" : "rgba(51, 65, 85, 0.04)";
+                }
+
+                ctx.beginPath();
+                ctx.moveTo(l.source.x, l.source.y);
+                ctx.lineTo(l.target.x, l.target.y);
+                ctx.stroke();
+            });
+
+            // Draw Nodes
+            rawNodes.forEach(n => {
+                const matchesFilter = (activeFilter === 'todos' || n.group === activeFilter);
+                const isSel = (selectedNode === n);
+                const isConnected = selectedNode && connectedNodeIds.has(n.id);
+
+                ctx.save();
+                ctx.beginPath();
+
+                let radius = n.radius;
+                if (isSel) radius += 6;
+                else if (isConnected && showRelatedOnCanvas) radius += 3;
+
+                ctx.arc(n.x, n.y, radius, 0, Math.PI * 2);
+
+                if (selectedNode) {
+                    if (isSel) {
+                        ctx.fillStyle = n.color;
+                        ctx.lineWidth = 3.5;
+                        ctx.strokeStyle = "#38bdf8";
+                    } else if (isConnected && showRelatedOnCanvas) {
+                        ctx.fillStyle = n.color;
+                        ctx.lineWidth = 2.5;
+                        ctx.strokeStyle = "#ffffff";
+                    } else if (isConnected && !showRelatedOnCanvas) {
+                        ctx.fillStyle = n.color;
+                        ctx.lineWidth = 1.0;
+                        ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+                    } else {
+                        ctx.fillStyle = "rgba(24, 34, 57, 0.4)";
+                        ctx.lineWidth = 0.8;
+                        ctx.strokeStyle = "rgba(71, 85, 105, 0.25)";
+                    }
+                } else {
+                    ctx.fillStyle = matchesFilter ? n.color : "#1e293b";
+                    ctx.lineWidth = matchesFilter ? 1.6 : 0.8;
+                    ctx.strokeStyle = matchesFilter ? "#ffffff" : "#475569";
+                }
+
+                ctx.fill();
+                ctx.stroke();
+
+                // Node text label
+                const showLabel = (zoom > 0.65 || isSel || (isConnected && showRelatedOnCanvas));
+                if (showLabel) {
+                    ctx.font = isSel ? "bold 13px sans-serif" : (isConnected && showRelatedOnCanvas ? "600 12px sans-serif" : "11px sans-serif");
+                    ctx.fillStyle = isSel ? "#38bdf8" : (selectedNode && !isConnected ? "rgba(100, 116, 139, 0.35)" : "#f8fafc");
+                    ctx.textAlign = "center";
+                    const displayTitle = n.title.length > 22 ? n.title.slice(0, 20) + "..." : n.title;
+                    ctx.fillText(displayTitle, n.x, n.y + radius + 14);
+                }
+
+                ctx.restore();
+            });
+
+            ctx.restore();
+            simulate();
+            requestAnimationFrame(draw);
+        }
+        requestAnimationFrame(draw);
+
+        // Position & coordinate helpers
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: (clientX - rect.left - panX) / zoom,
+                y: (clientY - rect.top - panY) / zoom,
+                rawX: clientX,
+                rawY: clientY
+            };
+        }
+
+        function findNodeAt(x, y) {
+            for (let i = rawNodes.length - 1; i >= 0; i--) {
+                const n = rawNodes[i];
+                const dx = n.x - x;
+                const dy = n.y - y;
+                if (Math.sqrt(dx*dx + dy*dy) <= n.radius + 10) return n;
+            }
+            return null;
+        }
+
+        // Mouse Handlers
+        let isDragging = false;
+        let lastMouseX = 0, lastMouseY = 0;
+
+        canvas.addEventListener("mousedown", e => {
+            const pos = getPos(e);
+            const n = findNodeAt(pos.x, pos.y);
+            if (n) {
+                draggedNode = n;
+                selectNode(n);
+            } else {
+                isDragging = true;
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+            }
+        });
+
+        window.addEventListener("mousemove", e => {
+            if (draggedNode) {
+                const pos = getPos(e);
+                draggedNode.x = pos.x;
+                draggedNode.y = pos.y;
+            } else if (isDragging) {
+                panX += (e.clientX - lastMouseX);
+                panY += (e.clientY - lastMouseY);
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+            }
+        });
+
+        window.addEventListener("mouseup", () => {
+            draggedNode = null;
+            isDragging = false;
+        });
+
+        // Touch Handlers
+        canvas.addEventListener("touchstart", e => {
+            if (e.touches.length === 1) {
+                const pos = getPos(e);
+                const n = findNodeAt(pos.x, pos.y);
+                if (n) {
+                    draggedNode = n;
+                    selectNode(n);
+                } else {
+                    isTouching = true;
+                    lastTouchX = e.touches[0].clientX;
+                    lastTouchY = e.touches[0].clientY;
+                }
+            } else if (e.touches.length === 2) {
+                draggedNode = null;
+                isTouching = false;
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                startDist = Math.sqrt(dx*dx + dy*dy);
+            }
+        }, { passive: false });
+
+        canvas.addEventListener("touchmove", e => {
+            e.preventDefault();
+            if (draggedNode && e.touches.length === 1) {
+                const pos = getPos(e);
+                draggedNode.x = pos.x;
+                draggedNode.y = pos.y;
+            } else if (isTouching && e.touches.length === 1) {
+                panX += (e.touches[0].clientX - lastTouchX);
+                panY += (e.touches[0].clientY - lastTouchY);
+                lastTouchX = e.touches[0].clientX;
+                lastTouchY = e.touches[0].clientY;
+            } else if (e.touches.length === 2) {
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                const factor = dist / startDist;
+                zoom = Math.min(Math.max(0.3, zoom * factor), 2.5);
+                startDist = dist;
+            }
+        }, { passive: false });
+
+        canvas.addEventListener("touchend", () => {
+            draggedNode = null;
+            isTouching = false;
+        });
+
+        function zoomIn() { zoom = Math.min(2.5, zoom * 1.25); }
+        function zoomOut() { zoom = Math.max(0.3, zoom * 0.8); }
+        function resetView() { zoom = 1.0; panX = 0; panY = 0; }
+
+        function filterCategory(cat, el) {
+            activeFilter = cat;
+            document.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
+            el.classList.add("active");
+        }
+
+        function toggleGlobalLinks() {
+            showAllGlobalLinks = !showAllGlobalLinks;
+            const btn = document.getElementById("btnToggleLinks");
+            const txt = document.getElementById("linkText");
+            if (showAllGlobalLinks) {
+                btn.classList.remove("active");
+                txt.innerText = "Ocultar Todas las Líneas";
+            } else {
+                btn.classList.add("active");
+                txt.innerText = "Mostrar Todas las Líneas";
+            }
+        }
+
+        // Selection & Dense Reading Drawer
+        function selectNode(n) {
+            selectedNode = n;
+            showRelatedOnCanvas = false; // By default keep related nodes collapsed/hidden until user asks!
+
+            const drawer = document.getElementById("detailDrawer");
+            const badge = document.getElementById("drawerBadge");
+            badge.innerText = n.badge || n.group.toUpperCase();
+            badge.style.background = n.color;
+            badge.style.color = "#fff";
+
+            document.getElementById("drawerTitle").innerText = n.title;
+            document.getElementById("drawerBody").innerHTML = n.text;
+
+            // Prepare related nodes panel (HIDDEN BY DEFAULT AS REQUESTED)
+            const panel = document.getElementById("relatedNodesPanel");
+            panel.classList.remove("visible");
+            panel.innerHTML = "";
+
+            const connectedNodes = [];
+            links.forEach(l => {
+                if (l.source === n) connectedNodes.push(l.target);
+                else if (l.target === n) connectedNodes.push(l.source);
+            });
+
+            document.getElementById("relatedBtnText").innerText = `🔗 Ver Nodos Relacionados (${connectedNodes.length})`;
+            document.getElementById("relatedArrow").innerText = "▼";
+
+            connectedNodes.forEach(target => {
+                const chip = document.createElement("div");
+                chip.className = "rel-node-chip";
+                chip.innerHTML = `<span class="rel-node-dot" style="background:${target.color}"></span> ${target.title}`;
+                chip.onclick = () => {
+                    selectNode(target);
+                    panToNode(target);
+                };
+                panel.appendChild(chip);
+            });
+
+            drawer.classList.add("open");
+        }
+
+        function toggleRelatedPanel() {
+            const panel = document.getElementById("relatedNodesPanel");
+            const isVisible = panel.classList.contains("visible");
+            if (isVisible) {
+                panel.classList.remove("visible");
+                document.getElementById("relatedArrow").innerText = "▼";
+                showRelatedOnCanvas = false;
+            } else {
+                panel.classList.add("visible");
+                document.getElementById("relatedArrow").innerText = "▲";
+                showRelatedOnCanvas = true; // Highlight related nodes on the canvas now!
+            }
+        }
+
+        function closeDrawer() {
+            document.getElementById("detailDrawer").classList.remove("open");
+            selectedNode = null;
+            showRelatedOnCanvas = false;
+        }
+
+        function panToNode(n) {
+            panX = width/2 - n.x * zoom;
+            panY = height/2 - n.y * zoom;
+        }
+
+        function changeFontSize(delta) {
+            fontSizeBase = Math.min(20, Math.max(12, fontSizeBase + delta));
+            document.documentElement.style.setProperty('--font-size-base', fontSizeBase + 'px');
+        }
+
+        // Live Search
+        document.getElementById("searchInput").addEventListener("input", e => {
+            const q = e.target.value.toLowerCase().trim();
+            if (!q) return;
+            const match = rawNodes.find(n => n.title.toLowerCase().includes(q) || n.text.toLowerCase().includes(q));
+            if (match) {
+                selectNode(match);
+                panToNode(match);
+            }
+        });
+    </script>
+</body>
+</html>

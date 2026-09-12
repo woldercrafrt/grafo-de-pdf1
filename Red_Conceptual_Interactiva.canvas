@@ -1,0 +1,1173 @@
+{
+  "nodes": [
+    {
+      "id": "group_box_salud",
+      "type": "group",
+      "label": "1. Núcleo de la Salud y Promoción",
+      "x": 60,
+      "y": 20,
+      "width": 420,
+      "height": 2600,
+      "color": "4"
+    },
+    {
+      "id": "group_box_its",
+      "type": "group",
+      "label": "2. Problema de las ITS",
+      "x": 560,
+      "y": 20,
+      "width": 420,
+      "height": 2600,
+      "color": "1"
+    },
+    {
+      "id": "group_box_medicina",
+      "type": "group",
+      "label": "3. Entorno Médico (Hegemónico)",
+      "x": 1060,
+      "y": 20,
+      "width": 420,
+      "height": 2600,
+      "color": "5"
+    },
+    {
+      "id": "group_box_ciencia",
+      "type": "group",
+      "label": "4. Entorno de la Ciencia",
+      "x": 1560,
+      "y": 20,
+      "width": 420,
+      "height": 2600,
+      "color": "6"
+    },
+    {
+      "id": "group_box_social",
+      "type": "group",
+      "label": "5. Entorno Social y Territorial",
+      "x": 2060,
+      "y": 20,
+      "width": 420,
+      "height": 2600,
+      "color": "2"
+    },
+    {
+      "id": "01_Definicion_de_Salud_Chapela",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/01_Definicion_de_Salud_Chapela.md",
+      "x": 100,
+      "y": 100,
+      "width": 340,
+      "height": 280,
+      "color": "4"
+    },
+    {
+      "id": "02_Carta_de_Ottawa_1986",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/02_Carta_de_Ottawa_1986.md",
+      "x": 100,
+      "y": 420,
+      "width": 340,
+      "height": 280,
+      "color": "4"
+    },
+    {
+      "id": "03_Promocion_de_la_Salud_Emancipatoria",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/03_Promocion_de_la_Salud_Emancipatoria.md",
+      "x": 100,
+      "y": 740,
+      "width": 340,
+      "height": 280,
+      "color": "4"
+    },
+    {
+      "id": "04_Promocion_de_la_Salud_Institucional",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/04_Promocion_de_la_Salud_Institucional.md",
+      "x": 100,
+      "y": 1060,
+      "width": 340,
+      "height": 280,
+      "color": "4"
+    },
+    {
+      "id": "05_Enfoque_de_Estilos_de_Vida",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/05_Enfoque_de_Estilos_de_Vida.md",
+      "x": 100,
+      "y": 1380,
+      "width": 340,
+      "height": 280,
+      "color": "4"
+    },
+    {
+      "id": "06_Sujeto_Etico_y_Capacidad_Deliberativa",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/06_Sujeto_Etico_y_Capacidad_Deliberativa.md",
+      "x": 100,
+      "y": 1700,
+      "width": 340,
+      "height": 280,
+      "color": "4"
+    },
+    {
+      "id": "07_Proyecto_de_Vida_y_Autonomia_Corporal",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/07_Proyecto_de_Vida_y_Autonomia_Corporal.md",
+      "x": 100,
+      "y": 2020,
+      "width": 340,
+      "height": 280,
+      "color": "4"
+    },
+    {
+      "id": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/08_Infecciones_de_Transmision_Sexual_ITS.md",
+      "x": 600,
+      "y": 100,
+      "width": 340,
+      "height": 280,
+      "color": "1"
+    },
+    {
+      "id": "09_Virus_del_Papiloma_Humano_VPH",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/09_Virus_del_Papiloma_Humano_VPH.md",
+      "x": 600,
+      "y": 420,
+      "width": 340,
+      "height": 280,
+      "color": "1"
+    },
+    {
+      "id": "10_VIH_y_SIDA_en_Jovenes",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/10_VIH_y_SIDA_en_Jovenes.md",
+      "x": 600,
+      "y": 740,
+      "width": 340,
+      "height": 280,
+      "color": "1"
+    },
+    {
+      "id": "11_ITS_Bacterianas_Sifilis_y_Gonorrea",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/11_ITS_Bacterianas_Sifilis_y_Gonorrea.md",
+      "x": 600,
+      "y": 1060,
+      "width": 340,
+      "height": 280,
+      "color": "1"
+    },
+    {
+      "id": "12_Vulnerabilidad_Biopsicosocial_Adolescente",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/12_Vulnerabilidad_Biopsicosocial_Adolescente.md",
+      "x": 600,
+      "y": 1380,
+      "width": 340,
+      "height": 280,
+      "color": "1"
+    },
+    {
+      "id": "13_Mitos_y_Resistencia_al_Uso_del_Condon",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/13_Mitos_y_Resistencia_al_Uso_del_Condon.md",
+      "x": 600,
+      "y": 1700,
+      "width": 340,
+      "height": 280,
+      "color": "1"
+    },
+    {
+      "id": "14_Estigma_Social_Culpa_y_Pena",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/14_Estigma_Social_Culpa_y_Pena.md",
+      "x": 600,
+      "y": 2020,
+      "width": 340,
+      "height": 280,
+      "color": "1"
+    },
+    {
+      "id": "15_Aislamiento_y_Retraso_en_la_Atencion",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/15_Aislamiento_y_Retraso_en_la_Atencion.md",
+      "x": 600,
+      "y": 2340,
+      "width": 340,
+      "height": 280,
+      "color": "1"
+    },
+    {
+      "id": "16_Modelo_Medico_Hegemonico_Menendez",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/16_Modelo_Medico_Hegemonico_Menendez.md",
+      "x": 1100,
+      "y": 100,
+      "width": 340,
+      "height": 280,
+      "color": "5"
+    },
+    {
+      "id": "17_Relacion_Medico_Paciente_Vertical",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/17_Relacion_Medico_Paciente_Vertical.md",
+      "x": 1100,
+      "y": 420,
+      "width": 340,
+      "height": 280,
+      "color": "5"
+    },
+    {
+      "id": "18_Barreras_Institucionales_Centro_de_Salud_T3",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/18_Barreras_Institucionales_Centro_de_Salud_T3.md",
+      "x": 1100,
+      "y": 740,
+      "width": 340,
+      "height": 280,
+      "color": "5"
+    },
+    {
+      "id": "19_Exigencia_Arbitraria_de_Tutor_Adulto",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/19_Exigencia_Arbitraria_de_Tutor_Adulto.md",
+      "x": 1100,
+      "y": 1060,
+      "width": 340,
+      "height": 280,
+      "color": "5"
+    },
+    {
+      "id": "20_Violacion_de_la_NOM_005_SSA2_1993",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/20_Violacion_de_la_NOM_005_SSA2_1993.md",
+      "x": 1100,
+      "y": 1380,
+      "width": 340,
+      "height": 280,
+      "color": "5"
+    },
+    {
+      "id": "21_Condoneria_y_Reparto_Mecanico_de_Folletos",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/21_Condoneria_y_Reparto_Mecanico_de_Folletos.md",
+      "x": 1100,
+      "y": 1700,
+      "width": 340,
+      "height": 280,
+      "color": "5"
+    },
+    {
+      "id": "22_Burocracia_de_Despacho_y_Contabilidad_de_Pacientes",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/22_Burocracia_de_Despacho_y_Contabilidad_de_Pacientes.md",
+      "x": 1100,
+      "y": 2020,
+      "width": 340,
+      "height": 280,
+      "color": "5"
+    },
+    {
+      "id": "23_Tension_de_Paradigmas_Cientificos",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/23_Tension_de_Paradigmas_Cientificos.md",
+      "x": 1600,
+      "y": 100,
+      "width": 340,
+      "height": 280,
+      "color": "6"
+    },
+    {
+      "id": "24_Paradigma_Positivista_Biomedico",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/24_Paradigma_Positivista_Biomedico.md",
+      "x": 1600,
+      "y": 420,
+      "width": 340,
+      "height": 280,
+      "color": "6"
+    },
+    {
+      "id": "25_Paradigma_Cualitativo_Socio_Critico",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/25_Paradigma_Cualitativo_Socio_Critico.md",
+      "x": 1600,
+      "y": 740,
+      "width": 340,
+      "height": 280,
+      "color": "6"
+    },
+    {
+      "id": "26_Aporte_de_la_Antropologia_y_Sociologia",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/26_Aporte_de_la_Antropologia_y_Sociologia.md",
+      "x": 1600,
+      "y": 1060,
+      "width": 340,
+      "height": 280,
+      "color": "6"
+    },
+    {
+      "id": "27_Psicologia_Evolutiva_y_Duelo_de_la_Infancia",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/27_Psicologia_Evolutiva_y_Duelo_de_la_Infancia.md",
+      "x": 1600,
+      "y": 1380,
+      "width": 340,
+      "height": 280,
+      "color": "6"
+    },
+    {
+      "id": "28_Metodologia_Mixta_y_Grupo_de_Reflexion",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/28_Metodologia_Mixta_y_Grupo_de_Reflexion.md",
+      "x": 1600,
+      "y": 1700,
+      "width": 340,
+      "height": 280,
+      "color": "6"
+    },
+    {
+      "id": "29_Adolescencia_como_Construccion_Social",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/29_Adolescencia_como_Construccion_Social.md",
+      "x": 2100,
+      "y": 100,
+      "width": 340,
+      "height": 280,
+      "color": "2"
+    },
+    {
+      "id": "30_Territorio_y_Marginacion_en_Iztapalapa",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/30_Territorio_y_Marginacion_en_Iztapalapa.md",
+      "x": 2100,
+      "y": 420,
+      "width": 340,
+      "height": 280,
+      "color": "2"
+    },
+    {
+      "id": "31_Desigualdad_de_Genero_y_Poder_Sexual",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/31_Desigualdad_de_Genero_y_Poder_Sexual.md",
+      "x": 2100,
+      "y": 740,
+      "width": 340,
+      "height": 280,
+      "color": "2"
+    },
+    {
+      "id": "32_Tabues_Familiares_y_Silencio_Domestico",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/32_Tabues_Familiares_y_Silencio_Domestico.md",
+      "x": 2100,
+      "y": 1060,
+      "width": 340,
+      "height": 280,
+      "color": "2"
+    },
+    {
+      "id": "33_Derechos_Sexuales_y_Reproductivos",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/33_Derechos_Sexuales_y_Reproductivos.md",
+      "x": 2100,
+      "y": 1380,
+      "width": 340,
+      "height": 280,
+      "color": "2"
+    },
+    {
+      "id": "34_Educacion_Sexual_Integral_Emancipatoria",
+      "type": "file",
+      "file": "Red_Conceptual_Salud_ITS/34_Educacion_Sexual_Integral_Emancipatoria.md",
+      "x": 2100,
+      "y": 1700,
+      "width": 340,
+      "height": 280,
+      "color": "2"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge_1",
+      "fromNode": "01_Definicion_de_Salud_Chapela",
+      "fromSide": "right",
+      "toNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_2",
+      "fromNode": "01_Definicion_de_Salud_Chapela",
+      "fromSide": "right",
+      "toNode": "06_Sujeto_Etico_y_Capacidad_Deliberativa",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_3",
+      "fromNode": "01_Definicion_de_Salud_Chapela",
+      "fromSide": "right",
+      "toNode": "03_Promocion_de_la_Salud_Emancipatoria",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_4",
+      "fromNode": "01_Definicion_de_Salud_Chapela",
+      "fromSide": "right",
+      "toNode": "02_Carta_de_Ottawa_1986",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_5",
+      "fromNode": "01_Definicion_de_Salud_Chapela",
+      "fromSide": "right",
+      "toNode": "07_Proyecto_de_Vida_y_Autonomia_Corporal",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_6",
+      "fromNode": "02_Carta_de_Ottawa_1986",
+      "fromSide": "right",
+      "toNode": "30_Territorio_y_Marginacion_en_Iztapalapa",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_7",
+      "fromNode": "02_Carta_de_Ottawa_1986",
+      "fromSide": "right",
+      "toNode": "04_Promocion_de_la_Salud_Institucional",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_8",
+      "fromNode": "02_Carta_de_Ottawa_1986",
+      "fromSide": "right",
+      "toNode": "01_Definicion_de_Salud_Chapela",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_9",
+      "fromNode": "02_Carta_de_Ottawa_1986",
+      "fromSide": "right",
+      "toNode": "03_Promocion_de_la_Salud_Emancipatoria",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_10",
+      "fromNode": "03_Promocion_de_la_Salud_Emancipatoria",
+      "fromSide": "right",
+      "toNode": "34_Educacion_Sexual_Integral_Emancipatoria",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_11",
+      "fromNode": "03_Promocion_de_la_Salud_Emancipatoria",
+      "fromSide": "right",
+      "toNode": "06_Sujeto_Etico_y_Capacidad_Deliberativa",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_12",
+      "fromNode": "03_Promocion_de_la_Salud_Emancipatoria",
+      "fromSide": "right",
+      "toNode": "16_Modelo_Medico_Hegemonico_Menendez",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_13",
+      "fromNode": "03_Promocion_de_la_Salud_Emancipatoria",
+      "fromSide": "right",
+      "toNode": "01_Definicion_de_Salud_Chapela",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_14",
+      "fromNode": "04_Promocion_de_la_Salud_Institucional",
+      "fromSide": "right",
+      "toNode": "02_Carta_de_Ottawa_1986",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_15",
+      "fromNode": "04_Promocion_de_la_Salud_Institucional",
+      "fromSide": "right",
+      "toNode": "05_Enfoque_de_Estilos_de_Vida",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_16",
+      "fromNode": "04_Promocion_de_la_Salud_Institucional",
+      "fromSide": "right",
+      "toNode": "21_Condoneria_y_Reparto_Mecanico_de_Folletos",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_17",
+      "fromNode": "04_Promocion_de_la_Salud_Institucional",
+      "fromSide": "right",
+      "toNode": "18_Barreras_Institucionales_Centro_de_Salud_T3",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_18",
+      "fromNode": "05_Enfoque_de_Estilos_de_Vida",
+      "fromSide": "right",
+      "toNode": "30_Territorio_y_Marginacion_en_Iztapalapa",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_19",
+      "fromNode": "05_Enfoque_de_Estilos_de_Vida",
+      "fromSide": "right",
+      "toNode": "16_Modelo_Medico_Hegemonico_Menendez",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_20",
+      "fromNode": "05_Enfoque_de_Estilos_de_Vida",
+      "fromSide": "right",
+      "toNode": "04_Promocion_de_la_Salud_Institucional",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_21",
+      "fromNode": "06_Sujeto_Etico_y_Capacidad_Deliberativa",
+      "fromSide": "right",
+      "toNode": "33_Derechos_Sexuales_y_Reproductivos",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_22",
+      "fromNode": "06_Sujeto_Etico_y_Capacidad_Deliberativa",
+      "fromSide": "right",
+      "toNode": "01_Definicion_de_Salud_Chapela",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_23",
+      "fromNode": "06_Sujeto_Etico_y_Capacidad_Deliberativa",
+      "fromSide": "right",
+      "toNode": "07_Proyecto_de_Vida_y_Autonomia_Corporal",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_24",
+      "fromNode": "06_Sujeto_Etico_y_Capacidad_Deliberativa",
+      "fromSide": "right",
+      "toNode": "03_Promocion_de_la_Salud_Emancipatoria",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_25",
+      "fromNode": "06_Sujeto_Etico_y_Capacidad_Deliberativa",
+      "fromSide": "right",
+      "toNode": "17_Relacion_Medico_Paciente_Vertical",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_26",
+      "fromNode": "07_Proyecto_de_Vida_y_Autonomia_Corporal",
+      "fromSide": "right",
+      "toNode": "33_Derechos_Sexuales_y_Reproductivos",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_27",
+      "fromNode": "07_Proyecto_de_Vida_y_Autonomia_Corporal",
+      "fromSide": "right",
+      "toNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_28",
+      "fromNode": "07_Proyecto_de_Vida_y_Autonomia_Corporal",
+      "fromSide": "right",
+      "toNode": "06_Sujeto_Etico_y_Capacidad_Deliberativa",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_29",
+      "fromNode": "07_Proyecto_de_Vida_y_Autonomia_Corporal",
+      "fromSide": "right",
+      "toNode": "01_Definicion_de_Salud_Chapela",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_30",
+      "fromNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "fromSide": "right",
+      "toNode": "12_Vulnerabilidad_Biopsicosocial_Adolescente",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_31",
+      "fromNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "fromSide": "right",
+      "toNode": "10_VIH_y_SIDA_en_Jovenes",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_32",
+      "fromNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "fromSide": "right",
+      "toNode": "09_Virus_del_Papiloma_Humano_VPH",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_33",
+      "fromNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "fromSide": "right",
+      "toNode": "11_ITS_Bacterianas_Sifilis_y_Gonorrea",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_34",
+      "fromNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "fromSide": "right",
+      "toNode": "13_Mitos_y_Resistencia_al_Uso_del_Condon",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_35",
+      "fromNode": "09_Virus_del_Papiloma_Humano_VPH",
+      "fromSide": "right",
+      "toNode": "12_Vulnerabilidad_Biopsicosocial_Adolescente",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_36",
+      "fromNode": "09_Virus_del_Papiloma_Humano_VPH",
+      "fromSide": "right",
+      "toNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_37",
+      "fromNode": "09_Virus_del_Papiloma_Humano_VPH",
+      "fromSide": "right",
+      "toNode": "15_Aislamiento_y_Retraso_en_la_Atencion",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_38",
+      "fromNode": "10_VIH_y_SIDA_en_Jovenes",
+      "fromSide": "right",
+      "toNode": "14_Estigma_Social_Culpa_y_Pena",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_39",
+      "fromNode": "10_VIH_y_SIDA_en_Jovenes",
+      "fromSide": "right",
+      "toNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_40",
+      "fromNode": "10_VIH_y_SIDA_en_Jovenes",
+      "fromSide": "right",
+      "toNode": "15_Aislamiento_y_Retraso_en_la_Atencion",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_41",
+      "fromNode": "11_ITS_Bacterianas_Sifilis_y_Gonorrea",
+      "fromSide": "right",
+      "toNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_42",
+      "fromNode": "11_ITS_Bacterianas_Sifilis_y_Gonorrea",
+      "fromSide": "right",
+      "toNode": "18_Barreras_Institucionales_Centro_de_Salud_T3",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_43",
+      "fromNode": "11_ITS_Bacterianas_Sifilis_y_Gonorrea",
+      "fromSide": "right",
+      "toNode": "17_Relacion_Medico_Paciente_Vertical",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_44",
+      "fromNode": "11_ITS_Bacterianas_Sifilis_y_Gonorrea",
+      "fromSide": "right",
+      "toNode": "15_Aislamiento_y_Retraso_en_la_Atencion",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_45",
+      "fromNode": "12_Vulnerabilidad_Biopsicosocial_Adolescente",
+      "fromSide": "right",
+      "toNode": "30_Territorio_y_Marginacion_en_Iztapalapa",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_46",
+      "fromNode": "12_Vulnerabilidad_Biopsicosocial_Adolescente",
+      "fromSide": "right",
+      "toNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_47",
+      "fromNode": "12_Vulnerabilidad_Biopsicosocial_Adolescente",
+      "fromSide": "right",
+      "toNode": "31_Desigualdad_de_Genero_y_Poder_Sexual",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_48",
+      "fromNode": "13_Mitos_y_Resistencia_al_Uso_del_Condon",
+      "fromSide": "right",
+      "toNode": "21_Condoneria_y_Reparto_Mecanico_de_Folletos",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_49",
+      "fromNode": "13_Mitos_y_Resistencia_al_Uso_del_Condon",
+      "fromSide": "right",
+      "toNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_50",
+      "fromNode": "13_Mitos_y_Resistencia_al_Uso_del_Condon",
+      "fromSide": "right",
+      "toNode": "31_Desigualdad_de_Genero_y_Poder_Sexual",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_51",
+      "fromNode": "14_Estigma_Social_Culpa_y_Pena",
+      "fromSide": "right",
+      "toNode": "32_Tabues_Familiares_y_Silencio_Domestico",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_52",
+      "fromNode": "14_Estigma_Social_Culpa_y_Pena",
+      "fromSide": "right",
+      "toNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_53",
+      "fromNode": "14_Estigma_Social_Culpa_y_Pena",
+      "fromSide": "right",
+      "toNode": "15_Aislamiento_y_Retraso_en_la_Atencion",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_54",
+      "fromNode": "15_Aislamiento_y_Retraso_en_la_Atencion",
+      "fromSide": "right",
+      "toNode": "14_Estigma_Social_Culpa_y_Pena",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_55",
+      "fromNode": "15_Aislamiento_y_Retraso_en_la_Atencion",
+      "fromSide": "right",
+      "toNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_56",
+      "fromNode": "15_Aislamiento_y_Retraso_en_la_Atencion",
+      "fromSide": "right",
+      "toNode": "18_Barreras_Institucionales_Centro_de_Salud_T3",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_57",
+      "fromNode": "16_Modelo_Medico_Hegemonico_Menendez",
+      "fromSide": "right",
+      "toNode": "22_Burocracia_de_Despacho_y_Contabilidad_de_Pacientes",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_58",
+      "fromNode": "16_Modelo_Medico_Hegemonico_Menendez",
+      "fromSide": "right",
+      "toNode": "19_Exigencia_Arbitraria_de_Tutor_Adulto",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_59",
+      "fromNode": "16_Modelo_Medico_Hegemonico_Menendez",
+      "fromSide": "right",
+      "toNode": "04_Promocion_de_la_Salud_Institucional",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_60",
+      "fromNode": "16_Modelo_Medico_Hegemonico_Menendez",
+      "fromSide": "right",
+      "toNode": "17_Relacion_Medico_Paciente_Vertical",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_61",
+      "fromNode": "17_Relacion_Medico_Paciente_Vertical",
+      "fromSide": "right",
+      "toNode": "20_Violacion_de_la_NOM_005_SSA2_1993",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_62",
+      "fromNode": "17_Relacion_Medico_Paciente_Vertical",
+      "fromSide": "right",
+      "toNode": "19_Exigencia_Arbitraria_de_Tutor_Adulto",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_63",
+      "fromNode": "17_Relacion_Medico_Paciente_Vertical",
+      "fromSide": "right",
+      "toNode": "16_Modelo_Medico_Hegemonico_Menendez",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_64",
+      "fromNode": "18_Barreras_Institucionales_Centro_de_Salud_T3",
+      "fromSide": "right",
+      "toNode": "22_Burocracia_de_Despacho_y_Contabilidad_de_Pacientes",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_65",
+      "fromNode": "18_Barreras_Institucionales_Centro_de_Salud_T3",
+      "fromSide": "right",
+      "toNode": "16_Modelo_Medico_Hegemonico_Menendez",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_66",
+      "fromNode": "18_Barreras_Institucionales_Centro_de_Salud_T3",
+      "fromSide": "right",
+      "toNode": "15_Aislamiento_y_Retraso_en_la_Atencion",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_67",
+      "fromNode": "19_Exigencia_Arbitraria_de_Tutor_Adulto",
+      "fromSide": "right",
+      "toNode": "20_Violacion_de_la_NOM_005_SSA2_1993",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_68",
+      "fromNode": "19_Exigencia_Arbitraria_de_Tutor_Adulto",
+      "fromSide": "right",
+      "toNode": "17_Relacion_Medico_Paciente_Vertical",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_69",
+      "fromNode": "19_Exigencia_Arbitraria_de_Tutor_Adulto",
+      "fromSide": "right",
+      "toNode": "15_Aislamiento_y_Retraso_en_la_Atencion",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_70",
+      "fromNode": "20_Violacion_de_la_NOM_005_SSA2_1993",
+      "fromSide": "right",
+      "toNode": "19_Exigencia_Arbitraria_de_Tutor_Adulto",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_71",
+      "fromNode": "20_Violacion_de_la_NOM_005_SSA2_1993",
+      "fromSide": "right",
+      "toNode": "33_Derechos_Sexuales_y_Reproductivos",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_72",
+      "fromNode": "20_Violacion_de_la_NOM_005_SSA2_1993",
+      "fromSide": "right",
+      "toNode": "16_Modelo_Medico_Hegemonico_Menendez",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_73",
+      "fromNode": "21_Condoneria_y_Reparto_Mecanico_de_Folletos",
+      "fromSide": "right",
+      "toNode": "04_Promocion_de_la_Salud_Institucional",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_74",
+      "fromNode": "21_Condoneria_y_Reparto_Mecanico_de_Folletos",
+      "fromSide": "right",
+      "toNode": "34_Educacion_Sexual_Integral_Emancipatoria",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_75",
+      "fromNode": "22_Burocracia_de_Despacho_y_Contabilidad_de_Pacientes",
+      "fromSide": "right",
+      "toNode": "16_Modelo_Medico_Hegemonico_Menendez",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_76",
+      "fromNode": "22_Burocracia_de_Despacho_y_Contabilidad_de_Pacientes",
+      "fromSide": "right",
+      "toNode": "18_Barreras_Institucionales_Centro_de_Salud_T3",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_77",
+      "fromNode": "23_Tension_de_Paradigmas_Cientificos",
+      "fromSide": "right",
+      "toNode": "28_Metodologia_Mixta_y_Grupo_de_Reflexion",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_78",
+      "fromNode": "23_Tension_de_Paradigmas_Cientificos",
+      "fromSide": "right",
+      "toNode": "24_Paradigma_Positivista_Biomedico",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_79",
+      "fromNode": "23_Tension_de_Paradigmas_Cientificos",
+      "fromSide": "right",
+      "toNode": "25_Paradigma_Cualitativo_Socio_Critico",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_80",
+      "fromNode": "24_Paradigma_Positivista_Biomedico",
+      "fromSide": "right",
+      "toNode": "16_Modelo_Medico_Hegemonico_Menendez",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_81",
+      "fromNode": "24_Paradigma_Positivista_Biomedico",
+      "fromSide": "right",
+      "toNode": "23_Tension_de_Paradigmas_Cientificos",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_82",
+      "fromNode": "25_Paradigma_Cualitativo_Socio_Critico",
+      "fromSide": "right",
+      "toNode": "28_Metodologia_Mixta_y_Grupo_de_Reflexion",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_83",
+      "fromNode": "25_Paradigma_Cualitativo_Socio_Critico",
+      "fromSide": "right",
+      "toNode": "23_Tension_de_Paradigmas_Cientificos",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_84",
+      "fromNode": "25_Paradigma_Cualitativo_Socio_Critico",
+      "fromSide": "right",
+      "toNode": "03_Promocion_de_la_Salud_Emancipatoria",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_85",
+      "fromNode": "26_Aporte_de_la_Antropologia_y_Sociologia",
+      "fromSide": "right",
+      "toNode": "29_Adolescencia_como_Construccion_Social",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_86",
+      "fromNode": "26_Aporte_de_la_Antropologia_y_Sociologia",
+      "fromSide": "right",
+      "toNode": "27_Psicologia_Evolutiva_y_Duelo_de_la_Infancia",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_87",
+      "fromNode": "26_Aporte_de_la_Antropologia_y_Sociologia",
+      "fromSide": "right",
+      "toNode": "31_Desigualdad_de_Genero_y_Poder_Sexual",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_88",
+      "fromNode": "27_Psicologia_Evolutiva_y_Duelo_de_la_Infancia",
+      "fromSide": "right",
+      "toNode": "12_Vulnerabilidad_Biopsicosocial_Adolescente",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_89",
+      "fromNode": "27_Psicologia_Evolutiva_y_Duelo_de_la_Infancia",
+      "fromSide": "right",
+      "toNode": "26_Aporte_de_la_Antropologia_y_Sociologia",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_90",
+      "fromNode": "27_Psicologia_Evolutiva_y_Duelo_de_la_Infancia",
+      "fromSide": "right",
+      "toNode": "29_Adolescencia_como_Construccion_Social",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_91",
+      "fromNode": "28_Metodologia_Mixta_y_Grupo_de_Reflexion",
+      "fromSide": "right",
+      "toNode": "34_Educacion_Sexual_Integral_Emancipatoria",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_92",
+      "fromNode": "28_Metodologia_Mixta_y_Grupo_de_Reflexion",
+      "fromSide": "right",
+      "toNode": "25_Paradigma_Cualitativo_Socio_Critico",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_93",
+      "fromNode": "28_Metodologia_Mixta_y_Grupo_de_Reflexion",
+      "fromSide": "right",
+      "toNode": "23_Tension_de_Paradigmas_Cientificos",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_94",
+      "fromNode": "29_Adolescencia_como_Construccion_Social",
+      "fromSide": "right",
+      "toNode": "30_Territorio_y_Marginacion_en_Iztapalapa",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_95",
+      "fromNode": "29_Adolescencia_como_Construccion_Social",
+      "fromSide": "right",
+      "toNode": "26_Aporte_de_la_Antropologia_y_Sociologia",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_96",
+      "fromNode": "29_Adolescencia_como_Construccion_Social",
+      "fromSide": "right",
+      "toNode": "31_Desigualdad_de_Genero_y_Poder_Sexual",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_97",
+      "fromNode": "30_Territorio_y_Marginacion_en_Iztapalapa",
+      "fromSide": "right",
+      "toNode": "12_Vulnerabilidad_Biopsicosocial_Adolescente",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_98",
+      "fromNode": "30_Territorio_y_Marginacion_en_Iztapalapa",
+      "fromSide": "right",
+      "toNode": "29_Adolescencia_como_Construccion_Social",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_99",
+      "fromNode": "30_Territorio_y_Marginacion_en_Iztapalapa",
+      "fromSide": "right",
+      "toNode": "18_Barreras_Institucionales_Centro_de_Salud_T3",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_100",
+      "fromNode": "31_Desigualdad_de_Genero_y_Poder_Sexual",
+      "fromSide": "right",
+      "toNode": "33_Derechos_Sexuales_y_Reproductivos",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_101",
+      "fromNode": "31_Desigualdad_de_Genero_y_Poder_Sexual",
+      "fromSide": "right",
+      "toNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_102",
+      "fromNode": "32_Tabues_Familiares_y_Silencio_Domestico",
+      "fromSide": "right",
+      "toNode": "14_Estigma_Social_Culpa_y_Pena",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_103",
+      "fromNode": "32_Tabues_Familiares_y_Silencio_Domestico",
+      "fromSide": "right",
+      "toNode": "34_Educacion_Sexual_Integral_Emancipatoria",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_104",
+      "fromNode": "32_Tabues_Familiares_y_Silencio_Domestico",
+      "fromSide": "right",
+      "toNode": "29_Adolescencia_como_Construccion_Social",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_105",
+      "fromNode": "33_Derechos_Sexuales_y_Reproductivos",
+      "fromSide": "right",
+      "toNode": "20_Violacion_de_la_NOM_005_SSA2_1993",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_106",
+      "fromNode": "33_Derechos_Sexuales_y_Reproductivos",
+      "fromSide": "right",
+      "toNode": "34_Educacion_Sexual_Integral_Emancipatoria",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_107",
+      "fromNode": "33_Derechos_Sexuales_y_Reproductivos",
+      "fromSide": "right",
+      "toNode": "06_Sujeto_Etico_y_Capacidad_Deliberativa",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_108",
+      "fromNode": "34_Educacion_Sexual_Integral_Emancipatoria",
+      "fromSide": "right",
+      "toNode": "33_Derechos_Sexuales_y_Reproductivos",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_109",
+      "fromNode": "34_Educacion_Sexual_Integral_Emancipatoria",
+      "fromSide": "right",
+      "toNode": "08_Infecciones_de_Transmision_Sexual_ITS",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_110",
+      "fromNode": "34_Educacion_Sexual_Integral_Emancipatoria",
+      "fromSide": "right",
+      "toNode": "06_Sujeto_Etico_y_Capacidad_Deliberativa",
+      "toSide": "left"
+    },
+    {
+      "id": "edge_111",
+      "fromNode": "34_Educacion_Sexual_Integral_Emancipatoria",
+      "fromSide": "right",
+      "toNode": "03_Promocion_de_la_Salud_Emancipatoria",
+      "toSide": "left"
+    }
+  ]
+}
