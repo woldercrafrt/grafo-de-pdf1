@@ -19,7 +19,17 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background: var(--bg-main); color: var(--text-main); overflow: hidden; width: 100vw; height: 100vh; position: fixed; }
+        body {
+            background: var(--bg-main);
+            color: var(--text-main);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
 
         /* HEADER SUPERIOR CON SWITCH GLOBAL */
         header {
@@ -77,29 +87,44 @@
 
         /* CONTROLES FLOTANTES */
         .controls {
-            position: absolute; bottom: 20px; right: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 90;
+            position: absolute;
+            bottom: max(24px, calc(16px + env(safe-area-inset-bottom, 0px)));
+            right: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 90;
         }
         .btn-ctrl {
-            width: 40px; height: 40px; border-radius: 50%; background: var(--bg-panel); color: #f8fafc;
+            width: 42px; height: 42px; border-radius: 50%; background: var(--bg-panel); color: #f8fafc;
             border: 1px solid var(--border-color); font-size: 16px; display: flex; align-items: center; justify-content: center;
             cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.5); user-select: none;
+            transition: transform 0.1s ease, background 0.2s;
         }
         .btn-ctrl:active { transform: scale(0.92); }
 
         .toggle-links-btn {
-            position: absolute; bottom: 20px; left: 16px; z-index: 90;
+            position: absolute;
+            bottom: max(24px, calc(16px + env(safe-area-inset-bottom, 0px)));
+            left: 18px;
+            z-index: 90;
             background: var(--bg-panel); border: 1px solid var(--border-color); color: #cbd5e1;
-            font-size: 11px; font-weight: 600; padding: 8px 14px; border-radius: 20px;
+            font-size: 11.5px; font-weight: 600; padding: 9px 15px; border-radius: 20px;
             cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+            transition: 0.2s;
         }
         .toggle-links-btn.active { border-color: var(--primary); color: var(--primary); background: #0f2744; }
 
         /* DRAWER MODAL DE LECTURA DUAL */
         .drawer {
-            position: absolute; bottom: 0; left: 0; right: 0; max-height: 88vh;
+            position: absolute; bottom: 0; left: 0; right: 0;
+            max-height: 86vh;
+            max-height: 86dvh;
             background: var(--bg-panel); border-top: 3px solid var(--primary); border-radius: 22px 22px 0 0;
-            padding: 20px 20px 30px; overflow-y: auto; transform: translateY(105%); transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 20px 20px max(40px, calc(20px + env(safe-area-inset-bottom, 20px)));
+            overflow-y: auto; transform: translateY(105%); transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             box-shadow: 0 -10px 40px rgba(0,0,0,0.85); z-index: 200;
+            -webkit-overflow-scrolling: touch;
         }
         .drawer.open { transform: translateY(0); }
 
@@ -185,6 +210,88 @@
         }
         .rel-node-chip:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-1px); }
         .rel-node-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+        /* RESPONSIVE MÓVIL (PROTECCIÓN CONTRA BOTONES ANDROID / GESTURE BARS) */
+        @media (max-width: 768px) {
+            header {
+                height: auto;
+                min-height: 56px;
+                padding: 6px 12px;
+                gap: 6px;
+            }
+            .header-title-box {
+                max-width: 140px;
+            }
+            .header-title {
+                font-size: 12px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .header-subtitle {
+                display: none;
+            }
+            .global-mode-switcher {
+                flex-shrink: 0;
+            }
+            .global-mode-btn {
+                padding: 4px 7px;
+                font-size: 10px;
+            }
+            .search-container {
+                flex-shrink: 0;
+            }
+            .search-input {
+                width: 85px;
+                padding: 4px 8px 4px 22px;
+                font-size: 11px;
+            }
+            .search-input:focus {
+                width: 120px;
+            }
+            .filter-bar {
+                top: 64px;
+                padding: 4px 8px;
+            }
+
+            /* ELEVACIÓN SEGURA DE CONTROLES: Los botones flotantes quedan por encima de la barra Android de 3 botones */
+            .controls {
+                bottom: max(78px, calc(32px + env(safe-area-inset-bottom, 24px)));
+                right: 12px;
+                gap: 6px;
+            }
+            .btn-ctrl {
+                width: 38px;
+                height: 38px;
+                font-size: 15px;
+            }
+            .toggle-links-btn {
+                bottom: max(78px, calc(32px + env(safe-area-inset-bottom, 24px)));
+                left: 12px;
+                padding: 8px 12px;
+                font-size: 10.5px;
+            }
+
+            /* DRAWER EN MÓVIL: Padding generoso para que nada quede tapado al final del scroll */
+            .drawer {
+                max-height: 80vh;
+                max-height: 80dvh;
+                padding: 16px 16px max(96px, calc(56px + env(safe-area-inset-bottom, 32px)));
+            }
+            .drawer-title {
+                font-size: 16px;
+            }
+            .drawer-actions .btn-font {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+            }
+            .drawer-close {
+                width: 30px;
+                height: 30px;
+                font-size: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -267,6 +374,9 @@
             </button>
             <div id="relatedNodesPanel" class="related-nodes-panel"></div>
         </div>
+
+        <!-- ESPACIO DE SEGURIDAD PARA MÓVILES (BARRA DE NAVEGACIÓN ANDROID) -->
+        <div class="drawer-mobile-spacer" style="height: 60px; width: 100%;"></div>
     </div>
 
     <script>
@@ -284,14 +394,35 @@
         window.addEventListener("resize", resize);
         resize();
 
-        // Node lookup map
+        // Categorized sector placement (avoids crisscrossed initial state and high momentum)
+        const groupAngles = {
+            'salud': -Math.PI / 2,                          // Top (12 o'clock)
+            'its': -Math.PI / 2 + (2 * Math.PI * 1 / 5),    // Top-Right (~2:30)
+            'medicina': -Math.PI / 2 + (2 * Math.PI * 2 / 5),// Bottom-Right (~5 o'clock)
+            'ciencia': -Math.PI / 2 + (2 * Math.PI * 3 / 5), // Bottom-Left (~7 o'clock)
+            'social': -Math.PI / 2 + (2 * Math.PI * 4 / 5)   // Top-Left (~9:30)
+        };
+
+        const groupCounts = {};
+        const groupCurIdx = {};
+        rawNodes.forEach(n => {
+            groupCounts[n.group] = (groupCounts[n.group] || 0) + 1;
+            groupCurIdx[n.group] = 0;
+        });
+
         const nodeMap = {};
-        rawNodes.forEach((n, idx) => {
-            const angle = (idx / rawNodes.length) * Math.PI * 2;
-            const dist = 180 + Math.random() * 220;
-            n.x = width/2 + Math.cos(angle) * dist;
-            n.y = height/2 + Math.sin(angle) * dist;
-            n.vx = 0; n.vy = 0;
+        rawNodes.forEach((n) => {
+            const baseAngle = groupAngles[n.group] !== undefined ? groupAngles[n.group] : 0;
+            const count = groupCounts[n.group] || 1;
+            const idxInGroup = groupCurIdx[n.group]++;
+            const spread = (idxInGroup - (count - 1) / 2) * 0.28;
+            const angle = baseAngle + spread;
+            const dist = 180 + (idxInGroup % 2) * 45;
+
+            n.x = width / 2 + Math.cos(angle) * dist;
+            n.y = height / 2 + Math.sin(angle) * dist;
+            n.vx = 0;
+            n.vy = 0;
             n.radius = 16;
             nodeMap[n.id] = n;
         });
@@ -318,49 +449,73 @@
         let startDist = 0;
         let lastTouchX = 0, lastTouchY = 0;
 
-        function simulate() {
-            // Repulsion
-            for (let i = 0; i < rawNodes.length; i++) {
-                for (let j = i + 1; j < rawNodes.length; j++) {
-                    const a = rawNodes[i];
+        // Physics Simulation Step with Alpha parameter & Energy Damping
+        function simulateStep(alpha = 1.0) {
+            const count = rawNodes.length;
+
+            // 1. Soft Repulsion between nodes
+            for (let i = 0; i < count; i++) {
+                const a = rawNodes[i];
+                for (let j = i + 1; j < count; j++) {
                     const b = rawNodes[j];
                     const dx = b.x - a.x;
                     const dy = b.y - a.y;
-                    const dist = Math.sqrt(dx*dx + dy*dy) || 1;
-                    if (dist < 280) {
-                        const force = (280 - dist) / 280 * 0.7;
+                    const dist = Math.hypot(dx, dy) || 1;
+                    if (dist < 230) {
+                        const force = ((230 - dist) / 230) * 0.38 * alpha;
                         const fx = (dx / dist) * force;
                         const fy = (dy / dist) * force;
-                        a.vx -= fx; a.vy -= fy;
-                        b.vx += fx; b.vy += fy;
+                        if (a !== draggedNode) { a.vx -= fx; a.vy -= fy; }
+                        if (b !== draggedNode) { b.vx += fx; b.vy += fy; }
                     }
                 }
             }
 
-            // Spring attraction
-            links.forEach(l => {
+            // 2. Gentle Spring attraction for links
+            for (let i = 0; i < links.length; i++) {
+                const l = links[i];
                 const dx = l.target.x - l.source.x;
                 const dy = l.target.y - l.source.y;
-                const dist = Math.sqrt(dx*dx + dy*dy) || 1;
-                const force = (dist - 130) * 0.006;
+                const dist = Math.hypot(dx, dy) || 1;
+                const force = (dist - 125) * 0.0035 * alpha;
                 const fx = (dx / dist) * force;
                 const fy = (dy / dist) * force;
-                l.source.vx += fx; l.source.vy += fy;
-                l.target.vx -= fx; l.target.vy -= fy;
-            });
+                if (l.source !== draggedNode) { l.source.vx += fx; l.source.vy += fy; }
+                if (l.target !== draggedNode) { l.target.vx -= fx; l.target.vy -= fy; }
+            }
 
-            // Center gravity & dampening
-            rawNodes.forEach(n => {
+            // 3. Center gravity, speed clamping, and high friction damping
+            for (let i = 0; i < count; i++) {
+                const n = rawNodes[i];
                 if (n !== draggedNode) {
-                    n.vx += (width/2 - n.x) * 0.0006;
-                    n.vy += (height/2 - n.y) * 0.0006;
+                    n.vx += (width / 2 - n.x) * 0.0004 * alpha;
+                    n.vy += (height / 2 - n.y) * 0.0004 * alpha;
+
+                    // Clamping prevents sudden jerks/explosions
+                    const speed = Math.hypot(n.vx, n.vy);
+                    const maxSpeed = 2.4 * Math.max(0.3, alpha);
+                    if (speed > maxSpeed && speed > 0) {
+                        n.vx = (n.vx / speed) * maxSpeed;
+                        n.vy = (n.vy / speed) * maxSpeed;
+                    }
+
                     n.x += n.vx;
                     n.y += n.vy;
-                    n.vx *= 0.86;
-                    n.vy *= 0.86;
+
+                    // Friction damping: 0.65 dissipates kinetic energy rapidly (no bouncing!)
+                    n.vx *= 0.65;
+                    n.vy *= 0.65;
                 }
-            });
+            }
         }
+
+        // Headless pre-warm relaxation: The graph loads already settled!
+        for (let step = 0; step < 85; step++) {
+            const alpha = Math.pow(1 - step / 85, 1.5);
+            simulateStep(alpha);
+        }
+
+        let simAlpha = 0.0;
 
         function draw() {
             ctx.clearRect(0, 0, width, height);
@@ -461,7 +616,13 @@
             });
 
             ctx.restore();
-            simulate();
+
+            // Run simulation only if there is active energy, then cool down
+            if (simAlpha > 0.002) {
+                simulateStep(simAlpha);
+                simAlpha *= 0.94;
+            }
+
             requestAnimationFrame(draw);
         }
         requestAnimationFrame(draw);
@@ -492,13 +653,19 @@
         // Mouse Handlers
         let isDragging = false;
         let lastMouseX = 0, lastMouseY = 0;
+        let mouseStartX = 0, mouseStartY = 0;
+        let nodeDragMoved = false;
 
         canvas.addEventListener("mousedown", e => {
             const pos = getPos(e);
             const n = findNodeAt(pos.x, pos.y);
+            mouseStartX = e.clientX;
+            mouseStartY = e.clientY;
+            nodeDragMoved = false;
             if (n) {
                 draggedNode = n;
-                selectNode(n);
+                draggedNode.vx = 0;
+                draggedNode.vy = 0;
             } else {
                 isDragging = true;
                 lastMouseX = e.clientX;
@@ -508,9 +675,15 @@
 
         window.addEventListener("mousemove", e => {
             if (draggedNode) {
+                if (!nodeDragMoved && Math.hypot(e.clientX - mouseStartX, e.clientY - mouseStartY) > 5) {
+                    nodeDragMoved = true;
+                }
                 const pos = getPos(e);
                 draggedNode.x = pos.x;
                 draggedNode.y = pos.y;
+                draggedNode.vx = 0;
+                draggedNode.vy = 0;
+                simAlpha = Math.max(simAlpha, 0.22);
             } else if (isDragging) {
                 panX += (e.clientX - lastMouseX);
                 panY += (e.clientY - lastMouseY);
@@ -520,38 +693,62 @@
         });
 
         window.addEventListener("mouseup", () => {
-            draggedNode = null;
+            if (draggedNode) {
+                if (!nodeDragMoved) {
+                    selectNode(draggedNode);
+                }
+                draggedNode.vx = 0;
+                draggedNode.vy = 0;
+                draggedNode = null;
+            }
             isDragging = false;
         });
 
         // Touch Handlers
+        let touchStartX = 0, touchStartY = 0;
+        let touchNodeMoved = false;
+
         canvas.addEventListener("touchstart", e => {
             if (e.touches.length === 1) {
                 const pos = getPos(e);
                 const n = findNodeAt(pos.x, pos.y);
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                touchNodeMoved = false;
                 if (n) {
                     draggedNode = n;
-                    selectNode(n);
+                    draggedNode.vx = 0;
+                    draggedNode.vy = 0;
                 } else {
                     isTouching = true;
                     lastTouchX = e.touches[0].clientX;
                     lastTouchY = e.touches[0].clientY;
                 }
             } else if (e.touches.length === 2) {
-                draggedNode = null;
+                if (draggedNode) {
+                    draggedNode.vx = 0;
+                    draggedNode.vy = 0;
+                    draggedNode = null;
+                }
                 isTouching = false;
                 const dx = e.touches[0].clientX - e.touches[1].clientX;
                 const dy = e.touches[0].clientY - e.touches[1].clientY;
-                startDist = Math.sqrt(dx*dx + dy*dy);
+                startDist = Math.hypot(dx, dy);
             }
         }, { passive: false });
 
         canvas.addEventListener("touchmove", e => {
             e.preventDefault();
             if (draggedNode && e.touches.length === 1) {
+                if (!touchNodeMoved && Math.hypot(e.touches[0].clientX - touchStartX, e.touches[0].clientY - touchStartY) > 6) {
+                    touchNodeMoved = true;
+                }
                 const pos = getPos(e);
                 draggedNode.x = pos.x;
                 draggedNode.y = pos.y;
+                draggedNode.vx = 0;
+                draggedNode.vy = 0;
+                simAlpha = Math.max(simAlpha, 0.22);
             } else if (isTouching && e.touches.length === 1) {
                 panX += (e.touches[0].clientX - lastTouchX);
                 panY += (e.touches[0].clientY - lastTouchY);
@@ -560,7 +757,7 @@
             } else if (e.touches.length === 2) {
                 const dx = e.touches[0].clientX - e.touches[1].clientX;
                 const dy = e.touches[0].clientY - e.touches[1].clientY;
-                const dist = Math.sqrt(dx*dx + dy*dy);
+                const dist = Math.hypot(dx, dy);
                 const factor = dist / startDist;
                 zoom = Math.min(Math.max(0.3, zoom * factor), 2.5);
                 startDist = dist;
@@ -568,7 +765,14 @@
         }, { passive: false });
 
         canvas.addEventListener("touchend", () => {
-            draggedNode = null;
+            if (draggedNode) {
+                if (!touchNodeMoved) {
+                    selectNode(draggedNode);
+                }
+                draggedNode.vx = 0;
+                draggedNode.vy = 0;
+                draggedNode = null;
+            }
             isTouching = false;
         });
 
